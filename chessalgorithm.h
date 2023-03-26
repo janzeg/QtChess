@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include "chessboard.h"
+#include "piece.h"
+#include "pawn.h"
 
 class ChessAlgorithm : public QObject
 {
@@ -24,6 +26,12 @@ public:
     //bool move(const QPoint &from, const QPoint &to);
 
 
+    Piece *currentPiece() const;
+
+    void setCurrentPiece(Piece *newCurrentPiece);
+
+    Pawn pawn() const;
+
 signals:
     void boardChanged(ChessBoard*);
     void gameOver(ChessAlgorithm::Result);
@@ -44,6 +52,8 @@ private:
     ChessBoard* m_board;
     Result m_result;
     Player m_currentPlayer;
+    Piece* m_currentPiece;
+    Pawn m_pawn;
 };
 
 #endif // CHESSALGORITHM_H

@@ -6,6 +6,7 @@
 class ChessBoard : public QObject
 {
     Q_OBJECT
+    // Sygnały ranksChanged/columnsChanged informują o zmianie wartości ranks/columns
     Q_PROPERTY(int ranks READ ranks NOTIFY ranksChanged)
     Q_PROPERTY(int columns READ columns NOTIFY columnsChanged)
 
@@ -27,6 +28,14 @@ signals:
 private:
     int m_ranks;
     int m_columns;
+    /* Wektor znaków reprezentujący układ figur na szachownicy
+     *            biała     czarna
+     * Król     - K         k
+     * Hetman   - Q         q
+     * Wieża    - R         r
+     * Goniec   - B         b
+     * Skoczek  - N         n
+     * Pionek   - P         p */
     QVector<char> m_boardData;
 
 protected:

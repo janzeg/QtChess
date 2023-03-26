@@ -9,23 +9,22 @@ ChessView::ChessView(QWidget *parent)
 
 }
 
+// Metoda odpowiedzialna za aktualizację szachownnicy
 void ChessView::setBoard(ChessBoard *board)
 {
     if(m_board == board) return;
     if(m_board) {
-        // disconnect all signal-slot connections between m_board and this
+        // Rozłączenie wszystkich połączeń (signal-slot) między m_board i tym obiektem (this)
         m_board->disconnect(this);
     }
     m_board = board;
-    // connect signals
+    // Utworzenie połączeń
     if(board){
         connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
         connect(board, SIGNAL(boardReset()), this, SLOT(update()));
     }
 
-    // connect signals (to be done later)
     updateGeometry();
-
 }
 
 ChessBoard *ChessView::board() const
@@ -171,6 +170,7 @@ QPoint ChessView::fieldAt(const QPoint &pt) const
 void ChessView::mouseReleaseEvent(QMouseEvent *event)
 {
     QPoint pt = fieldAt(event->pos());
+    qDebug() << "CLICKED: " << pt;
     if(pt.isNull()) return;
     emit clicked(pt);
 }

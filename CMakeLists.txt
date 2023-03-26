@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         chessview.h chessview.cpp
         resources.qrc
         foxandhounds.h foxandhounds.cpp
+        piece.h piece.cpp
+        pawn.h pawn.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -1,5 +1,6 @@
 #include "chessalgorithm.h"
 #include <QPoint>
+#include <QDebug>
 
 ChessAlgorithm::ChessAlgorithm(QObject *parent)
     : QObject{parent}
@@ -22,6 +23,7 @@ void ChessAlgorithm::setBoard(ChessBoard *board)
     emit boardChanged(m_board);
 }
 
+// Utworzenie klasycznej szachownicy 8x8
 void ChessAlgorithm::setupBoard()
 {
     setBoard(new ChessBoard(this, 8,8));
@@ -29,7 +31,9 @@ void ChessAlgorithm::setupBoard()
 
 void ChessAlgorithm::newGame()
 {
+    // Utworzenie szachownicy
     setupBoard();
+    // Rozstawienie figur
     board()->setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
@@ -49,17 +53,52 @@ void ChessAlgorithm::setCurrentPlayer(Player value)
     emit currentPlayerChanged(m_currentPlayer);
 }
 
+/*
+Pawn ChessAlgorithm::pawn() const
+{
+    return m_pawn;
+}
+*/
+
+void ChessAlgorithm::setCurrentPiece(Piece *newCurrentPiece)
+{
+    m_currentPiece = newCurrentPiece;
+}
+
+Piece *ChessAlgorithm::currentPiece() const
+{
+    return m_currentPiece;
+}
+
 bool ChessAlgorithm::move(int colFrom, int rankFrom,
                           int colTo, int rankTo)
 {
-    Q_UNUSED(colFrom)
-    Q_UNUSED(rankFrom)
-    Q_UNUSED(colTo)
-    Q_UNUSED(rankTo)
-    return false;
+    //Q_UNUSED(colFrom)
+    //Q_UNUSED(rankFrom)
+    //Q_UNUSED(colTo)
+    //Q_UNUSED(rankTo)
+    //return false;
+
+    // Określenie jaka figura została wybrana
+    char source = board()->data(colFrom, rankFrom);
+    qDebug() << "SOURCE:" << source;
+
+    switch (source)
+    {
+    case 'P':
+        setCurrentPiece(&m_pawn);
+        break;
+    }
+
+    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo)) {
+        board()->movePiece(colFrom, rankFrom, colTo, rankTo);
+    }
+
+    return true;
 }
 
 bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
 {
+    qDebug() << "ChessAlgorithm::move";
     return move(from.x(), from.y(), to.x(), to.y());
 }

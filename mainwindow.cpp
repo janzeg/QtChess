@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_view->setPiece('n', QIcon(":/chessIcons/Chess_ndt45.png")); // knight
     m_view->setPiece('b', QIcon(":/chessIcons/Chess_bdt45.png")); // bishop
 
-    //m_algorithm = new ChessAlgorithm(this);
-    m_algorithm = new FoxAndHounds(this);
+    m_algorithm = new ChessAlgorithm(this);
+    //m_algorithm = new FoxAndHounds(this); // F&H
 
     m_algorithm->newGame();
     m_view->setBoard(m_algorithm->board());
@@ -52,7 +52,7 @@ void MainWindow::viewClicked(const QPoint &field)
         }
     } else {
         if(field != m_clickPoint){
-            m_algorithm->move(m_clickPoint, field);
+            m_algorithm->move(m_clickPoint, field); // F&H
             //m_view->board()->movePiece(m_clickPoint.x(), m_clickPoint.y(), field.x(), field.y());
         }
         m_clickPoint = QPoint();
