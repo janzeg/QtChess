@@ -16,7 +16,7 @@ public:
     int columns() const;
     void setData(int column, int rank, char value);
     char data(int column, int rank) const;
-    void movePiece(int fromColumn, int fromRank, int toColumn, int toRank); // nie wiem czy na pewno w public
+    void movePiece(int fromColumn, int fromRank, int toColumn, int toRank);
     void setFen(const QString &fen);
 
 signals:
@@ -43,8 +43,6 @@ protected:
     void setColumns(int newColumns);
     void initBoard();
     bool setDataInternal(int column, int rank, char value);
-
-
 };
 
 #endif // CHESSBOARD_H

@@ -51,8 +51,9 @@ char ChessBoard::data(int column, int rank) const
 void ChessBoard::setData(int column, int rank, char value)
 {
     // Jeżeli zmieni się ułożenie figur na szachownicy, to emitowany jest sygnał dataChanged
-    if(setDataInternal(column, rank, value))
+    if(setDataInternal(column, rank, value))    
     emit dataChanged(column, rank);
+    //qDebug() << m_boardData;
 }
 
 bool ChessBoard::setDataInternal(int column, int rank, char value)
