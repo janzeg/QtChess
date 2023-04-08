@@ -1,13 +1,13 @@
-#ifndef KNIGHT_H
-#define KNIGHT_H
+#ifndef QUEEN_H
+#define QUEEN_H
 
 #include "piece.h"
 
-class Knight : public Piece
+class Queen : public Piece
 {
 public:
-    explicit Knight(QObject *parent = nullptr);
+    explicit Queen(QObject *parent = nullptr);
     bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
 };
 
-#endif // KNIGHT_H
+#endif // QUEEN_H

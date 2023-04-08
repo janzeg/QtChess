@@ -7,6 +7,8 @@
 #include "pawn.h"
 #include "rook.h"
 #include "bishop.h"
+#include "knight.h"
+#include "queen.h"
 
 class ChessAlgorithm : public QObject
 {
@@ -60,6 +62,8 @@ private:
     Pawn m_pawn;
     Rook m_rook;
     Bishop m_bishop;
+    Knight m_knight;
+    Queen m_queen;
 };
 
 #endif // CHESSALGORITHM_H

@@ -26,6 +26,9 @@ set(PROJECT_SOURCES
         pawn.h pawn.cpp
         rook.h rook.cpp
         bishop.h bishop.cpp
+        knight.h knight.cpp
+        queen.h queen.cpp
+        king.h king.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

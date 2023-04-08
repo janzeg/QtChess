@@ -110,7 +110,20 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     case 'B':
         setCurrentPiece(&m_bishop);
         break;
+    case 'n':
+        setCurrentPiece(&m_knight);
+        break;
+    case 'N':
+        setCurrentPiece(&m_knight);
+        break;
+    case 'q':
+        setCurrentPiece(&m_queen);
+        break;
+    case 'Q':
+        setCurrentPiece(&m_queen);
+        break;
     }
+
 
 
     // Określenie koloru figury
