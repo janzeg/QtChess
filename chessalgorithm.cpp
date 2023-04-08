@@ -54,6 +54,13 @@ void ChessAlgorithm::setCurrentPlayer(Player value)
 }
 
 /*
+Rook ChessAlgorithm::rook() const
+{
+    return m_rook;
+}
+*/
+
+/*
 Pawn ChessAlgorithm::pawn() const
 {
     return m_pawn;
@@ -88,9 +95,34 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     case 'P':
         setCurrentPiece(&m_pawn);
         break;
+    case 'p':
+        setCurrentPiece(&m_pawn);
+        break;
+    case 'r':
+        setCurrentPiece(&m_rook);
+        break;
+    case 'R':
+        setCurrentPiece(&m_rook);
+        break;
+    case 'b':
+        setCurrentPiece(&m_bishop);
+        break;
+    case 'B':
+        setCurrentPiece(&m_bishop);
+        break;
     }
 
-    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo)) {
+
+    // Określenie koloru figury
+    char color;
+    if (isupper(source) == true) {
+        color = 'w'; // biały
+    }
+    else {
+        color = 'b'; // czarny
+    }
+
+    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), color)) {
         board()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
 

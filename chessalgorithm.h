@@ -5,6 +5,8 @@
 #include "chessboard.h"
 #include "piece.h"
 #include "pawn.h"
+#include "rook.h"
+#include "bishop.h"
 
 class ChessAlgorithm : public QObject
 {
@@ -32,6 +34,8 @@ public:
 
     Pawn pawn() const;
 
+    Rook rook() const;
+
 signals:
     void boardChanged(ChessBoard*);
     void gameOver(ChessAlgorithm::Result);
@@ -54,6 +58,8 @@ private:
     Player m_currentPlayer;
     Piece* m_currentPiece;
     Pawn m_pawn;
+    Rook m_rook;
+    Bishop m_bishop;
 };
 
 #endif // CHESSALGORITHM_H

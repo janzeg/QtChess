@@ -1,16 +1,14 @@
-#ifndef PAWN_H
-#define PAWN_H
+#ifndef ROOK_H
+#define ROOK_H
 
 #include "piece.h"
 #include <QDebug>
 
-class Pawn : public Piece
+class Rook : public Piece
 {
 public:
-    explicit Pawn(QObject *parent = nullptr);
+    explicit Rook(QObject *parent = nullptr);
     bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
-
-
 };
 
-#endif // PAWN_H
+#endif // ROOK_H

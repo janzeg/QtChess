@@ -103,3 +103,17 @@ void ChessBoard::setFen(const QString &fen)
     }
     emit boardReset();
 }
+
+char ChessBoard::getColor(int column, int rank)
+{
+    if (this->data(column, rank) == ' ') {
+        return 'e'; // empty
+    }
+
+    if (isupper(this->data(column, rank)) == true) {
+        return 'w'; // white
+    }
+    else {
+        return 'b'; // black
+    }
+}

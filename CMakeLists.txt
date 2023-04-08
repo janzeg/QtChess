@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         foxandhounds.h foxandhounds.cpp
         piece.h piece.cpp
         pawn.h pawn.cpp
+        rook.h rook.cpp
+        bishop.h bishop.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
