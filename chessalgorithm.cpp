@@ -90,41 +90,27 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     char source = board()->data(colFrom, rankFrom);
     qDebug() << "SOURCE:" << source;
 
-    switch (source)
+    switch (tolower(source))
     {
-    case 'P':
-        setCurrentPiece(&m_pawn);
-        break;
     case 'p':
         setCurrentPiece(&m_pawn);
         break;
     case 'r':
         setCurrentPiece(&m_rook);
         break;
-    case 'R':
-        setCurrentPiece(&m_rook);
-        break;
     case 'b':
-        setCurrentPiece(&m_bishop);
-        break;
-    case 'B':
         setCurrentPiece(&m_bishop);
         break;
     case 'n':
         setCurrentPiece(&m_knight);
         break;
-    case 'N':
-        setCurrentPiece(&m_knight);
-        break;
     case 'q':
         setCurrentPiece(&m_queen);
         break;
-    case 'Q':
-        setCurrentPiece(&m_queen);
+    case 'k':
+        setCurrentPiece(&m_king);
         break;
     }
-
-
 
     // Określenie koloru figury
     char color;
@@ -146,4 +132,8 @@ bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
 {
     qDebug() << "ChessAlgorithm::move";
     return move(from.x(), from.y(), to.x(), to.y());
+}
+
+bool ChessAlgorithm::isCheck() {
+    return false;
 }

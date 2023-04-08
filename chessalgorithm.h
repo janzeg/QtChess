@@ -9,6 +9,7 @@
 #include "bishop.h"
 #include "knight.h"
 #include "queen.h"
+#include "king.h"
 
 class ChessAlgorithm : public QObject
 {
@@ -53,6 +54,7 @@ protected:
     void setBoard(ChessBoard *board);
     void setResult(Result);
     void setCurrentPlayer(Player);
+    bool isCheck();
 
 private:
     ChessBoard* m_board;
@@ -64,6 +66,7 @@ private:
     Bishop m_bishop;
     Knight m_knight;
     Queen m_queen;
+    King m_king;
 };
 
 #endif // CHESSALGORITHM_H

@@ -51,7 +51,7 @@ bool Rook::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
     }
 
     // Bicie
-    if (color == board->getColor(colTo, rankTo)) {
+    if (color == board->getColor(colTo, rankTo) || tolower(board->data(colTo, rankTo)) == 'k') {
         validOk = false;
     }
 

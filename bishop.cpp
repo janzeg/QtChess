@@ -84,7 +84,7 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
     }
 
     // Bicie
-    if (color == board->getColor(colTo, rankTo)) {
+    if (color == board->getColor(colTo, rankTo) || tolower(board->data(colTo, rankTo)) == 'k') {
         validOk = false;
     }
 

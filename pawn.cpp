@@ -22,7 +22,8 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
             validOk = true;
         }
         // Bicie
-        if (((colTo == colFrom + 1 || colTo == colFrom - 1) && rankTo == rankFrom + 1) && board->getColor(colTo, rankTo) == 'b') {
+        if (((colTo == colFrom + 1 || colTo == colFrom - 1) && rankTo == rankFrom + 1) &&
+                (board->getColor(colTo, rankTo) == 'b') && (tolower(board->data(colTo, rankTo)) != 'k')) {
             validOk = true;
         }
         break;
@@ -36,7 +37,8 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
             validOk = true;
         }
         // Bicie
-        if (((colTo == colFrom + 1 || colTo == colFrom - 1) && rankTo == rankFrom - 1) && board->getColor(colTo, rankTo) == 'b') {
+        if (((colTo == colFrom + 1 || colTo == colFrom - 1) && rankTo == rankFrom - 1) &&
+                (board->getColor(colTo, rankTo) == 'b') && (tolower(board->data(colTo, rankTo)) != 'k')) {
             validOk = true;
         }
         break;
