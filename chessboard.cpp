@@ -53,7 +53,7 @@ void ChessBoard::setData(int column, int rank, char value)
     // Jeżeli zmieni się ułożenie figur na szachownicy, to emitowany jest sygnał dataChanged
     if(setDataInternal(column, rank, value))    
     emit dataChanged(column, rank);
-    //qDebug() << m_boardData;
+    qDebug() << m_boardData;
 }
 
 bool ChessBoard::setDataInternal(int column, int rank, char value)
@@ -117,3 +117,38 @@ char ChessBoard::getColor(int column, int rank)
         return 'b'; // black
     }
 }
+
+void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
+{
+    int index = m_boardData.indexOf(piece);
+    //qDebug() << "INDEX - " << index;
+
+    column = (index % 8) + 1;
+
+    if (index < 7) {
+        rank = 1;
+    }
+    else if (index >= 8 && index < 15) {
+        rank = 2;
+    }
+    else if (index >= 16 && index <= 23) {
+        rank = 3;
+    }
+    else if (index >= 24 && index <= 31) {
+        rank = 4;
+    }
+    else if (index >= 32 && index <= 39) {
+        rank = 5;
+    }
+    else if (index >= 40 && index <= 47) {
+        rank = 6;
+    }
+    else if (index >= 48 && index <= 55) {
+        rank = 7;
+    }
+    else if (index >= 56 && index <= 63) {
+        rank = 8;
+    }
+
+}
+

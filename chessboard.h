@@ -19,6 +19,7 @@ public:
     void movePiece(int fromColumn, int fromRank, int toColumn, int toRank);
     void setFen(const QString &fen);
     char getColor(int column, int rank);
+    void getPiecePosition(char piece, int &column, int &rank) const;
 
 signals:
     void ranksChanged(int);
