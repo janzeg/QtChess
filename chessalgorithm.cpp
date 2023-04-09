@@ -106,7 +106,9 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     //Q_UNUSED(colTo)
     //Q_UNUSED(rankTo)
 
-    qDebug() << "Aktualny gracz - " << char(currentPlayer());
+    copyBoardToBuffer();
+
+    qDebug() << " --- AKTUALNY GRACZ --- : " << char(currentPlayer());
 
     // Określenie jaka figura została wybrana
     char source = board()->data(colFrom, rankFrom);
@@ -144,37 +146,31 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         break;
     }
 
-    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), color)) {
-        board()->movePiece(colFrom, rankFrom, colTo, rankTo);
-        if (currentPlayer() == PlayerWhite) {
-            setCurrentPlayer(PlayerBlack);
-        }
-        else {
-            setCurrentPlayer(PlayerWhite);
-        }
+    // Sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury
+    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), color) == true)  {
+        // Wykonanie ruchu na buforowej szachownicy
+        bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
+    }
+    else {
+        return 0;
     }
 
-    board()->isCheck('w');   // sprawdzenie czy jest szach na
-
-    //m_bufferBoard = m_board;
-
-    //qDebug() << "NORMAL BOARD: " << m_board->m_boardData;
-    //qDebug() << "BUFFER BOARD: " << m_bufferBoard->m_boardData;
-
-    static int cnt = 0;
-    cnt++;
-
-    /*
-    if (cnt == 2) {
+    // Sprawdzenie czy ruch nie powoduje szacha na graczu, który wykonuje ruch (odsłonięcia króla na szach)
+    if (bufferBoard()->isCheck(currentPlayer()) == true) {
+        // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
         copyBoardToBuffer();
-        qDebug() << "copyBoardToBuffer...";
+        return 0;
     }
 
-    if (cnt == 4) {
-        copyBufferToBoard();
-        qDebug() << "copyBufferToBoard...";
-    }*/
+    // Jeżeli walidacja przeszła pomyślnie to można wykonać ruch już na rzeczywistej szachownicy
+    board()->movePiece(colFrom, rankFrom, colTo, rankTo);
 
+    if (currentPlayer() == PlayerWhite) {
+        setCurrentPlayer(PlayerBlack);
+    }
+    else {
+        setCurrentPlayer(PlayerWhite);
+    }
 
     return true;
 }

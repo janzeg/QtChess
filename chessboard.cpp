@@ -221,7 +221,7 @@ bool ChessBoard::isCheck(char color) {
     } piece;
 
     int kingCol, kingRank;
-    this->getPiecePosition('K', kingCol, kingRank);
+    this->getPiecePosition(king, kingCol, kingRank);
 
 
     // ----------------- SZACH PRAWO ----------------- //
@@ -378,8 +378,6 @@ bool ChessBoard::isCheck(char color) {
         check.knight = false;
     }
 
-
-
     qDebug() << " CHECK Right - " << check.right;
     qDebug() << " CHECK Left - " << check.left;
     qDebug() << " CHECK Top - " << check.top;
@@ -390,6 +388,13 @@ bool ChessBoard::isCheck(char color) {
     qDebug() << " CHECK BottomRight - " << check.bottomRight;
     qDebug() << " CHECK Knight - " << check.knight;
 
-    return false;
+    if (check.right || check.left || check.top || check.bottom || check.topLeft ||
+        check.topRight || check.bottomLeft || check.bottomRight || check.knight)
+    {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 

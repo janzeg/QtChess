@@ -16,7 +16,6 @@ bool Rook::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
         validOk = false;
     }
 
-
     // Sprawdzenie czy coś nie stoi na drodze
     // Ruch w pionie w górę
     if (rankTo > rankFrom) {
