@@ -6,7 +6,7 @@ Pawn::Pawn(QObject *parent)
 
 }
 
-bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color) {
+bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color) {
 
     bool validOk = false;
 

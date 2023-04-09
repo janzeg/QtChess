@@ -20,6 +20,12 @@ public:
     void setFen(const QString &fen);
     char getColor(int column, int rank);
     void getPiecePosition(char piece, int &column, int &rank) const;
+    //QVector<char> m_boardData;
+    bool isCheck(char color);
+
+    QVector<char> boardData() const;
+
+    void setBoardData(const QVector<char> &newBoardData);
 
 signals:
     void ranksChanged(int);

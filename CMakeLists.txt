@@ -21,7 +21,6 @@ set(PROJECT_SOURCES
         chessboard.h chessboard.cpp
         chessview.h chessview.cpp
         resources.qrc
-        foxandhounds.h foxandhounds.cpp
         piece.h piece.cpp
         pawn.h pawn.cpp
         rook.h rook.cpp

@@ -7,7 +7,7 @@ Rook::Rook(QObject *parent)
 
 }
 
-bool Rook::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color) {
+bool Rook::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color) {
 
     bool validOk = true;
 

@@ -19,8 +19,8 @@ class ChessAlgorithm : public QObject
     Q_PROPERTY(Player currentPlayer READ currentPlayer NOTIFY currentPlayerChanged)
 
 public:
-    enum Result { NoResult, Player1Wins, Draw, Player2Wins };
-    enum Player { NoPlayer, Player1, Player2 };
+    enum Result { NoResult, PlayerWhiteWins, Draw, PlayerBlackWins };
+    enum Player { NoPlayer = ' ', PlayerWhite = 'w', PlayerBlack = 'b' };
 
     explicit ChessAlgorithm(QObject *parent = 0);
     ChessBoard* board() const;
@@ -30,14 +30,11 @@ public:
     //bool move(int colFrom, int rankFrom, int colTo, int rankTo); // Nie wiem czy public
     //bool move(const QPoint &from, const QPoint &to);
 
-
     Piece *currentPiece() const;
-
     void setCurrentPiece(Piece *newCurrentPiece);
-
     Pawn pawn() const;
-
     Rook rook() const;
+    ChessBoard* bufferBoard() const; // ???????
 
 signals:
     void boardChanged(ChessBoard*);
@@ -54,10 +51,12 @@ protected:
     void setBoard(ChessBoard *board);
     void setResult(Result);
     void setCurrentPlayer(Player);
-    bool isCheck(char color);
+
+    void setBufferBoard(ChessBoard *bufferBoard); // ???????
 
 private:
     ChessBoard* m_board;
+    ChessBoard* m_bufferBoard;
     Result m_result;
     Player m_currentPlayer;
     Piece* m_currentPiece;
@@ -67,6 +66,8 @@ private:
     Knight m_knight;
     Queen m_queen;
     King m_king;
+    void copyBoardToBuffer();
+    void copyBufferToBoard();
 };
 
 #endif // CHESSALGORITHM_H

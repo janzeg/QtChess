@@ -6,7 +6,7 @@ King::King(QObject *parent)
 
 }
 
-bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard *board, char color)
+bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color)
 {
     bool validOk = true;
 

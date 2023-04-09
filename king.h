@@ -7,7 +7,7 @@ class King : public Piece
 {
 public:
     explicit King(QObject *parent = nullptr);
-    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
+    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color);
 };
 
 #endif // KING_H

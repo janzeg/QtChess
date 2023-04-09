@@ -8,7 +8,7 @@ class Rook : public Piece
 {
 public:
     explicit Rook(QObject *parent = nullptr);
-    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
+    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color);
 };
 
 #endif // ROOK_H
