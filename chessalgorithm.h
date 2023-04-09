@@ -54,7 +54,7 @@ protected:
     void setBoard(ChessBoard *board);
     void setResult(Result);
     void setCurrentPlayer(Player);
-    bool isCheck();
+    bool isCheck(char color);
 
 private:
     ChessBoard* m_board;

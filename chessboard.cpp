@@ -43,7 +43,7 @@ void ChessBoard::initBoard()
 // Określenie jaka figura znajduje się w danym polu (kolumna, wiersz) szachownicy
 char ChessBoard::data(int column, int rank) const
 {
-    if (column > 8 || rank > 8 ) {
+    if (column > 8 || rank > 8 || column < 1 || rank < 1 ) {
         return 0;
     }
 
@@ -125,9 +125,11 @@ char ChessBoard::getColor(int column, int rank)
 void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
 {
     int index = m_boardData.indexOf(piece);
-    //qDebug() << "INDEX - " << index;
+    qDebug() << "INDEX - " << index;
 
     column = (index % 8) + 1;
+
+    //qDebug() << "COLUMN - " << column;
 
     if (index < 7) {
         rank = 1;
@@ -154,5 +156,6 @@ void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
         rank = 8;
     }
 
+    //qDebug() << "RANK - " << rank;
 }
 

@@ -53,7 +53,7 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
     case topLeft:
         j = 1;
         for (int i = rankFrom + 1; i < rankTo; i++) {
-            qDebug() << "P(" << colFrom - j << ", " << rankFrom + j << ")";
+            //qDebug() << "P(" << colFrom - j << ", " << rankFrom + j << ")";
             if (board->data(colFrom - j, rankFrom + j) != ' ') {
                 validOk = false;
             }

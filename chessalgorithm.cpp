@@ -114,18 +114,14 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
     // Określenie koloru figury
     char color;
-    if (isupper(source) == true) {
-        color = 'w'; // biały
-    }
-    else {
-        color = 'b'; // czarny
-    }
+    if (isupper(source) == true) { color = 'w'; }   // biały
+    else { color = 'b'; }                           // czarny
 
     if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), color)) {
         board()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
 
-    isCheck();
+    isCheck('w');   // sprawdzenie czy jest szach na
 
     /*
     int col, rank;
@@ -143,7 +139,7 @@ bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
     return move(from.x(), from.y(), to.x(), to.y());
 }
 
-bool ChessAlgorithm::isCheck() {
+bool ChessAlgorithm::isCheck(char color) {
 
     // Na razie testy algorytmu wykrywania szacha dla czarnego króla
     // Potem trzeba będzie rozdzielić to w zależności do koloru figury:
@@ -152,6 +148,25 @@ bool ChessAlgorithm::isCheck() {
     // w tym celu trzeba będzie przekazywać potencjalny stan tablicy do tej funkcji jako parametr
     // i będzie ona weryfikować czy dany potencjalny ruch (powodujący przekazane rozłożenie figur) powoduje szach
     // (tym razem na królu koloru tego samego co figura, która się rusza).
+
+
+    // Parametr color - mówi czy sprawdzamy szach na czarnych czy na białych
+    char king = 'k';
+    char queen = 'Q';
+    char rook = 'R';
+    char bishop = 'B';
+    char knight = 'N';
+    char pawn = 'P';
+
+    // Jeżeli sprawdzamy czy jest szach na białych to zmieniamy figury na czarne
+    if (color == 'w') {
+        king = toupper(king);
+        queen = tolower(queen);
+        rook = tolower(rook);
+        bishop = tolower(bishop);
+        knight = tolower(knight);
+        pawn = tolower(pawn);
+    }
 
     struct {
         bool topLeft = false;
@@ -162,7 +177,7 @@ bool ChessAlgorithm::isCheck() {
         bool bottom = false;
         bool bottomLeft = false;
         bool left = false;
-        bool other = false;
+        bool knight = false;
     } check;
 
     struct {
@@ -177,63 +192,59 @@ bool ChessAlgorithm::isCheck() {
     } piece;
 
     int kingCol, kingRank;
-    board()->getPiecePosition('k', kingCol, kingRank);
+    board()->getPiecePosition('K', kingCol, kingRank);
 
-    // ----------- SZACH PRAWO ----------- //
-    // Sprawdzenie jaka figura znajduje się po prawej stronie od króla
+
+    // ----------------- SZACH PRAWO ----------------- //
     for (int i = 1; i <= 7; i++) {
         piece.right = board()->data(kingCol + i, kingRank);
         if (piece.right != ' ') {
             break;
         }
     }
-    if (piece.right == 'Q' || piece.right == 'R') {
+    if (piece.right == queen || piece.right == rook) {
         check.right = true;
     }
     else {
         check.right = false;
     }
 
-    // ----------- SZACH LEWO ----------- //
-    // Sprawdzenie jaka figura znajduje się po lewej stronie od króla
+    // ----------------- SZACH LEWO ----------------- //
     for (int i = 1; i <= 7; i++) {
         piece.left = board()->data(kingCol - i, kingRank);
         if (piece.left != ' ') {
             break;
         }
     }
-    if (piece.left == 'Q' || piece.left == 'R') {
+    if (piece.left == queen || piece.left == rook) {
         check.left = true;
     }
     else {
         check.left = false;
     }
 
-
-    // ----------- SZACH GÓRA ----------- //
-    // Sprawdzenie jaka figura znajduje się na górze od króla
+    // ----------------- SZACH GÓRA ----------------- //
     for (int i = 1; i <= 7; i++) {
         piece.top = board()->data(kingCol, kingRank + i);
         if (piece.top != ' ') {
             break;
         }
     }
-    if (piece.top == 'Q' || piece.top == 'R') {
+    if (piece.top == queen || piece.top == rook) {
         check.top = true;
     }
     else {
         check.top = false;
     }
 
-    // ----------- SZACH DÓŁ ----------- //
-    // Sprawdzenie jaka figura znajduje się na dole od króla
+    // ----------------- SZACH DÓŁ ----------------- //
     for (int i = 1; i <= 7; i++) {
         piece.bottom = board()->data(kingCol, kingRank - i);
         if (piece.bottom != ' ') {
             break;
         }
     }
-    if (piece.bottom == 'Q' || piece.bottom == 'R') {
+    if (piece.bottom == queen || piece.bottom == rook) {
         piece.bottom = true;
     }
     else {
@@ -241,11 +252,107 @@ bool ChessAlgorithm::isCheck() {
     }
 
 
+    int j;
 
-    qDebug() << " !!! checkRight - " << check.right;
-    qDebug() << " !!! checkLeft - " << check.left;
-    qDebug() << " !!! checkTop - " << check.top;
-    qDebug() << " !!! checkBottom - " << check.bottom;
+    // ----------------- SZACH GÓRA-LEWO ----------------- //
+    for (int i = 1; i <= 7; i++) {
+        j = 1;
+        for (int i = kingRank + 1; i < 7; i++) {
+            piece.topLeft = board()->data(kingCol - j, kingRank + j);
+            if (piece.topLeft != ' ') {
+                break;
+            }
+            j++;
+        }
+    }
+    if (piece.topLeft == queen || piece.topLeft == bishop) {
+        check.topLeft = true;
+    }
+    else {
+        check.topLeft = false;
+    }
+
+    // ----------------- SZACH GÓRA-PRAWO ----------------- //
+    for (int i = 1; i <= 7; i++) {
+        j = 1;
+        for (int i = kingRank + 1; i < 7; i++) {
+            piece.topRight = board()->data(kingCol + j, kingRank + j);
+            if (piece.topRight != ' ') {
+                break;
+            }
+            j++;
+        }
+    }
+    if (piece.topRight == queen || piece.topRight == bishop) {
+        check.topRight = true;
+    }
+    else {
+        check.topRight = false;
+    }
+
+    // ----------------- SZACH DÓŁ-LEWO ----------------- //
+    for (int i = 1; i <= 7; i++) {
+        j = 1;
+        for (int i = 0; i < kingRank - 1; i++) {
+            piece.bottomLeft = board()->data(kingCol - j, kingRank - j);
+            if (piece.bottomLeft != ' ') {
+                break;
+            }
+            j++;
+        }
+    }
+    if (piece.bottomLeft == queen || piece.bottomLeft == bishop) {
+        check.bottomLeft = true;
+    }
+    else {
+        check.bottomLeft = false;
+    }
+
+    // ----------------- SZACH DÓŁ-PRAWO ----------------- //
+    for (int i = 1; i <= 7; i++) {
+        j = 1;
+        for (int i = 0; i < kingRank - 1; i++) {
+            piece.bottomRight = board()->data(kingCol + j, kingRank - j);
+            if (piece.bottomRight != ' ') {
+                break;
+            }
+            j++;
+        }
+    }
+    if (piece.bottomRight == queen || piece.bottomRight == bishop) {
+        check.bottomRight = true;
+    }
+    else {
+        check.bottomRight = false;
+    }
+
+    // ----------------- SZACH SKOCZEK ----------------- //
+    if ((board()->data(kingCol + 1, kingRank + 2) == knight) ||
+        (board()->data(kingCol - 1, kingRank + 2) == knight) ||
+        (board()->data(kingCol + 1, kingRank - 2) == knight) ||
+        (board()->data(kingCol - 1, kingRank - 2) == knight) ||
+        (board()->data(kingCol + 2, kingRank + 1) == knight) ||
+        (board()->data(kingCol + 2, kingRank - 1) == knight) ||
+        (board()->data(kingCol - 2, kingRank + 1) == knight) ||
+        (board()->data(kingCol - 2, kingRank - 1) == knight))
+    {
+        check.knight = true;
+    }
+    else {
+        check.knight = false;
+    }
+
+
+    /*
+    qDebug() << " CHECK Right - " << check.right;
+    qDebug() << " CHECK Left - " << check.left;
+    qDebug() << " CHECK Top - " << check.top;
+    qDebug() << " CHECK Bottom - " << check.bottom;
+    qDebug() << " CHECK TopLeft - " << check.topLeft;
+    qDebug() << " CHECK TopRight - " << check.topRight;
+    qDebug() << " CHECK BottomLeft - " << check.bottomLeft;
+    qDebug() << " CHECK BottomRight - " << check.bottomRight;
+    qDebug() << " CHECK Knight - " << check.knight;*/
 
     return false;
 }
