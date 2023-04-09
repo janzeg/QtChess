@@ -38,7 +38,7 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
         }
         // Bicie
         if (((colTo == colFrom + 1 || colTo == colFrom - 1) && rankTo == rankFrom - 1) &&
-                (board->getColor(colTo, rankTo) == 'b') && (tolower(board->data(colTo, rankTo)) != 'k')) {
+                (board->getColor(colTo, rankTo) == 'w') && (tolower(board->data(colTo, rankTo)) != 'k')) {
             validOk = true;
         }
         break;

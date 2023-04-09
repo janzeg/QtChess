@@ -125,6 +125,8 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         board()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
 
+    isCheck();
+
     /*
     int col, rank;
     board()->getPiecePosition('r', col, rank);
@@ -143,7 +145,7 @@ bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
 
 bool ChessAlgorithm::isCheck() {
 
-    // Na razie testy algorytmu wykrywania szacha.
+    // Na razie testy algorytmu wykrywania szacha dla czarnego króla
     // Potem trzeba będzie rozdzielić to w zależności do koloru figury:
     // jeżeli ruch wykonują białe to sprawdzam szacha dla czarnego króla i odwrotnie.
     // Potem też trzeba będzie przy walidacji sprawdzać czy dany ruch nie powoduje szacha (odsłonięcie króla na szach)
@@ -151,8 +153,99 @@ bool ChessAlgorithm::isCheck() {
     // i będzie ona weryfikować czy dany potencjalny ruch (powodujący przekazane rozłożenie figur) powoduje szach
     // (tym razem na królu koloru tego samego co figura, która się rusza).
 
+    struct {
+        bool topLeft = false;
+        bool top = false;
+        bool topRight = false;
+        bool right = false;
+        bool bottomRight = false;
+        bool bottom = false;
+        bool bottomLeft = false;
+        bool left = false;
+        bool other = false;
+    } check;
+
+    struct {
+        char topLeft;
+        char top;
+        char topRight;
+        char right;
+        char bottomRight;
+        char bottom;
+        char bottomLeft;
+        char left;
+    } piece;
+
     int kingCol, kingRank;
-    board()->getPiecePosition('r', kingCol, kingRank);
+    board()->getPiecePosition('k', kingCol, kingRank);
+
+    // ----------- SZACH PRAWO ----------- //
+    // Sprawdzenie jaka figura znajduje się po prawej stronie od króla
+    for (int i = 1; i <= 7; i++) {
+        piece.right = board()->data(kingCol + i, kingRank);
+        if (piece.right != ' ') {
+            break;
+        }
+    }
+    if (piece.right == 'Q' || piece.right == 'R') {
+        check.right = true;
+    }
+    else {
+        check.right = false;
+    }
+
+    // ----------- SZACH LEWO ----------- //
+    // Sprawdzenie jaka figura znajduje się po lewej stronie od króla
+    for (int i = 1; i <= 7; i++) {
+        piece.left = board()->data(kingCol - i, kingRank);
+        if (piece.left != ' ') {
+            break;
+        }
+    }
+    if (piece.left == 'Q' || piece.left == 'R') {
+        check.left = true;
+    }
+    else {
+        check.left = false;
+    }
+
+
+    // ----------- SZACH GÓRA ----------- //
+    // Sprawdzenie jaka figura znajduje się na górze od króla
+    for (int i = 1; i <= 7; i++) {
+        piece.top = board()->data(kingCol, kingRank + i);
+        if (piece.top != ' ') {
+            break;
+        }
+    }
+    if (piece.top == 'Q' || piece.top == 'R') {
+        check.top = true;
+    }
+    else {
+        check.top = false;
+    }
+
+    // ----------- SZACH DÓŁ ----------- //
+    // Sprawdzenie jaka figura znajduje się na dole od króla
+    for (int i = 1; i <= 7; i++) {
+        piece.bottom = board()->data(kingCol, kingRank - i);
+        if (piece.bottom != ' ') {
+            break;
+        }
+    }
+    if (piece.bottom == 'Q' || piece.bottom == 'R') {
+        piece.bottom = true;
+    }
+    else {
+        piece.bottom = false;
+    }
+
+
+
+    qDebug() << " !!! checkRight - " << check.right;
+    qDebug() << " !!! checkLeft - " << check.left;
+    qDebug() << " !!! checkTop - " << check.top;
+    qDebug() << " !!! checkBottom - " << check.bottom;
 
     return false;
 }

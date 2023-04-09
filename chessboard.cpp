@@ -43,6 +43,10 @@ void ChessBoard::initBoard()
 // Określenie jaka figura znajduje się w danym polu (kolumna, wiersz) szachownicy
 char ChessBoard::data(int column, int rank) const
 {
+    if (column > 8 || rank > 8 ) {
+        return 0;
+    }
+
     //qDebug() << m_boardData.at((rank-1)*columns()+(column-1));
     return m_boardData.at((rank-1)*columns()+(column-1));
 }
@@ -53,7 +57,7 @@ void ChessBoard::setData(int column, int rank, char value)
     // Jeżeli zmieni się ułożenie figur na szachownicy, to emitowany jest sygnał dataChanged
     if(setDataInternal(column, rank, value))    
     emit dataChanged(column, rank);
-    qDebug() << m_boardData;
+    //qDebug() << m_boardData;
 }
 
 bool ChessBoard::setDataInternal(int column, int rank, char value)
