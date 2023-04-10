@@ -212,7 +212,7 @@ bool ChessAlgorithm::isCheckMate(char color) {
 
     // Color - kolor gracza, dla którego sprawdzam czy jest mat
 
-    copyBoardToBuffer();    // ????????????????????
+    copyBoardToBuffer();
 
     bool checkMate = true;
 
@@ -245,58 +245,40 @@ bool ChessAlgorithm::isCheckMate(char color) {
     }
 
     // Sprawdzenie czy jakikolwiek ruch gracza pozwoli uniknąć szacha
-    for (auto piece : board()->boardData()) {
+    for (int pieceCol = 1; pieceCol <= 8; pieceCol++) {
+        for (int pieceRank = 1; pieceRank <= 8; pieceRank++) {
 
-        // Figura nie może być pusta oraz musi należeć do gracza, dla którego sprawdzany jest mat
-        if (piece == ' ' || board()->getColor(piece) != color || tolower(piece) == 'k' ) {
-            continue;
-        }
+            char piece = board()->data(pieceCol, pieceRank);
 
-        //qDebug() << "FIGURA - " << piece;
+            // Figura nie może być pusta oraz musi należeć do gracza, dla którego sprawdzany jest mat
+            if (piece == ' ' || board()->getColor(piece) != color || tolower(piece) == 'k' ) {
+                continue;
+            }
 
-        // Ustawienie aktualnej figury
-        setCurrentPiece(piece);
+            // Ustawienie aktualnej figury
+            setCurrentPiece(piece);
 
-        // Pobranie pozycji figury
-        int pieceCol, pieceRank;
-        board()->getPiecePosition(piece, pieceCol, pieceRank);
+            for (int col = 1; col <= 8; col++) {
+                for (int rank = 1; rank <= 8; rank++) {
 
-        for (int col = 1; col <= 8; col++) {
-            for (int rank = 1; rank <= 8; rank++) {
+                    // Walidacja nr 1
+                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), color) == true) {
+                        // Wykonanie ruchu na buforowej szachownicy
+                        bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
 
-                if (piece == 'P' && col == 7 && rank == 3 && pieceCol == 7 && pieceRank == 2) {
-                    qDebug() << "TUTUTU";
-                }
-
-                // Walidacja nr 1
-                if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), color) == true) {
-                    // Wykonanie ruchu na buforowej szachownicy
-                    bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
-
-                    //if (piece == 'P' && col == 7 && rank == 3) {
-                    //    qDebug() << "TUTUTU";
-                    //}
-
-                    // Walidacja nr 2
-                    if (bufferBoard()->isCheck(color) == false) {
-                        copyBoardToBuffer();    // ????????????????????
-                        checkMate = false;
-                        goto exit;
+                        // Walidacja nr 2
+                        if (bufferBoard()->isCheck(color) == false) {
+                            copyBoardToBuffer();
+                            checkMate = false;
+                            goto exit;
+                        }
+                        // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
+                        copyBoardToBuffer();
                     }
-                    // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
-                    copyBoardToBuffer();
                 }
             }
         }
     }
-
     exit:
     return checkMate;
-
-    /* // Król nie może szachować króla przeciwnika
-    if (rankTo == kingRank + 1 || rankTo == kingRank || rankTo == kingRank - 1)    {
-        if (colTo == kingCol - 1 || colTo == kingCol || colTo == kingCol + 1) {
-            validOk = false;
-        }
-    }*/
 }
