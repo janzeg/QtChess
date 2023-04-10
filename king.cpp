@@ -10,6 +10,12 @@ bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
 {
     bool validOk = true;
 
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     if ((rankTo != rankFrom && rankTo != rankFrom + 1 && rankTo != rankFrom - 1) ||
         (colTo != colFrom && colTo != colFrom + 1 && colTo != colFrom - 1))
     {

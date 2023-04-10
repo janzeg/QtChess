@@ -122,6 +122,16 @@ char ChessBoard::getColor(int column, int rank)
     }
 }
 
+char ChessBoard::getColor(char piece)
+{
+    if (isupper(piece) == true) {
+        return 'w'; // white
+    }
+    else {
+        return 'b'; // black
+    }
+}
+
 void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
 {
     int index = m_boardData.indexOf(piece);
@@ -265,10 +275,10 @@ bool ChessBoard::isCheck(char color) {
         }
     }
     if (piece.bottom == queen || piece.bottom == rook) {
-        piece.bottom = true;
+        check.bottom = true;
     }
     else {
-        piece.bottom = false;
+        check.bottom = false;
     }
 
     int j;
@@ -299,6 +309,9 @@ bool ChessBoard::isCheck(char color) {
         for (int i = kingRank + 1; i < 7; i++) {
             piece.topRight = this->data(kingCol + j, kingRank + j);
             if (piece.topRight != ' ') {
+
+                //qDebug() << "ALALALA" << piece.topRight;
+
                 break;
             }
             j++;
@@ -387,5 +400,6 @@ bool ChessBoard::isCheck(char color) {
     else {
         return false;
     }
+
 }
 

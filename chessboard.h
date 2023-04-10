@@ -27,6 +27,7 @@ public:
 
     void setBoardData(const QVector<char> &newBoardData);
 
+    char getColor(char piece);
 
 
 signals:

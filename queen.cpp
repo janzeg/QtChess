@@ -10,6 +10,12 @@ bool Queen::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoa
 
     bool validOk = true;
 
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     enum moveType { none,
                     crossTopRight, crossTopLeft, crossDownRight, crossDownLeft,
                     right, left, up, down};

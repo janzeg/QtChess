@@ -10,6 +10,13 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
 
     bool validOk = false;
 
+
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     switch (color)
     {
 

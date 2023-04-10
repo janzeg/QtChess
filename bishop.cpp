@@ -10,6 +10,12 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
 
     bool validOk = true;
 
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     enum moveType { none, topRight, topLeft, downRight, downLeft };
     moveType crossMove = none;
 

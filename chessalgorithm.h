@@ -37,6 +37,7 @@ public:
     ChessBoard* bufferBoard() const; // ???????
 
     bool isCheckMate(char color);
+    void setCurrentPiece(char newCurrentPiece);
 
 signals:
     void boardChanged(ChessBoard*);

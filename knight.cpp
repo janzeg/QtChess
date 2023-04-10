@@ -11,6 +11,12 @@ bool Knight::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
 
     bool validOk = true;
 
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     // Tylko ruchy w kształcie L
     if (colTo == colFrom + 1 || colTo == colFrom - 1) {
         if (rankTo != rankFrom + 2 && rankTo != rankFrom - 2) {

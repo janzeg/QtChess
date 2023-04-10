@@ -93,38 +93,9 @@ void ChessAlgorithm::setCurrentPiece(Piece *newCurrentPiece)
     m_currentPiece = newCurrentPiece;
 }
 
-Piece *ChessAlgorithm::currentPiece() const
+void ChessAlgorithm::setCurrentPiece(char newCurrentPiece)
 {
-    return m_currentPiece;
-}
-
-bool ChessAlgorithm::move(int colFrom, int rankFrom,
-                          int colTo, int rankTo)
-{
-    //Q_UNUSED(colFrom)
-    //Q_UNUSED(rankFrom)
-    //Q_UNUSED(colTo)
-    //Q_UNUSED(rankTo)
-
-    copyBoardToBuffer();
-
-    qDebug() << " --- AKTUALNY GRACZ --- : " << char(currentPlayer());
-
-    // Określenie jaka figura została wybrana
-    char source = board()->data(colFrom, rankFrom);
-    //qDebug() << "SOURCE:" << source;
-
-    // Określenie koloru figury
-    char color;
-    if (isupper(source) == true) { color = 'w'; }   // biały
-    else { color = 'b'; }                           // czarny
-
-    // Gracz może poruszać się tylko swoimi figurami
-    if (color != currentPlayer()) {
-        return 0;
-    }
-
-    switch (tolower(source))
+    switch (tolower(newCurrentPiece))
     {
     case 'p':
         setCurrentPiece(&m_pawn);
@@ -145,6 +116,42 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         setCurrentPiece(&m_king);
         break;
     }
+}
+
+Piece *ChessAlgorithm::currentPiece() const
+{
+    return m_currentPiece;
+}
+
+bool ChessAlgorithm::move(int colFrom, int rankFrom,
+                          int colTo, int rankTo)
+{
+    //Q_UNUSED(colFrom)
+    //Q_UNUSED(rankFrom)
+    //Q_UNUSED(colTo)
+    //Q_UNUSED(rankTo)
+
+    copyBoardToBuffer();
+
+    qDebug() << " --- AKTUALNY GRACZ --- : " << char(currentPlayer());
+
+    // Określenie jaka figura została wybrana
+    char piece = board()->data(colFrom, rankFrom);
+    //qDebug() << "SOURCE:" << source;
+
+    // Określenie koloru figury
+    char color;
+    if (isupper(piece) == true) { color = 'w'; }   // biały
+    else { color = 'b'; }                          // czarny
+
+
+    // Gracz może poruszać się tylko swoimi figurami
+    if (color != currentPlayer()) {
+        return 0;
+    }
+
+    // Ustawienie aktualnej figury
+    setCurrentPiece(piece);
 
     // Walidacja nr 1 - sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury i ułożenia innych figur na szachownicy
     if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), color) == true)  {
@@ -176,7 +183,6 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
          oppositePlayer = 'w';
     }
 
-
     // Sprawdzenie czy jest szach
     if (board()->isCheck(oppositePlayer) == true) {
         qDebug() << "SZACH NA " << char(oppositePlayer) << "!!!!!!";
@@ -206,6 +212,8 @@ bool ChessAlgorithm::isCheckMate(char color) {
 
     // Color - kolor gracza, dla którego sprawdzam czy jest mat
 
+    copyBoardToBuffer();    // ????????????????????
+
     bool checkMate = true;
 
     char king = 'k';
@@ -213,13 +221,15 @@ bool ChessAlgorithm::isCheckMate(char color) {
         king = toupper(king);
     }
     int kingCol, kingRank;
-    board()->getPiecePosition(king, kingCol, kingRank);
 
+
+    board()->getPiecePosition(king, kingCol, kingRank);
 
     // Sprawdzenie czy król może uciec od szacha
     for (int col = kingCol - 1; col <= kingCol + 1; col++) {
         for (int rank = kingRank - 1; rank <= kingRank + 1; rank++) {
             // Walidacja nr 1
+            setCurrentPiece(&m_king);
             if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), bufferBoard(), color) == true) {
                 // Wykonanie ruchu na buforowej szachownicy
                 bufferBoard()->movePiece(kingCol, kingRank, col, rank);
@@ -235,8 +245,50 @@ bool ChessAlgorithm::isCheckMate(char color) {
     }
 
     // Sprawdzenie czy jakikolwiek ruch gracza pozwoli uniknąć szacha
+    for (auto piece : board()->boardData()) {
 
+        // Figura nie może być pusta oraz musi należeć do gracza, dla którego sprawdzany jest mat
+        if (piece == ' ' || board()->getColor(piece) != color || tolower(piece) == 'k' ) {
+            continue;
+        }
 
+        //qDebug() << "FIGURA - " << piece;
+
+        // Ustawienie aktualnej figury
+        setCurrentPiece(piece);
+
+        // Pobranie pozycji figury
+        int pieceCol, pieceRank;
+        board()->getPiecePosition(piece, pieceCol, pieceRank);
+
+        for (int col = 1; col <= 8; col++) {
+            for (int rank = 1; rank <= 8; rank++) {
+
+                if (piece == 'P' && col == 7 && rank == 3 && pieceCol == 7 && pieceRank == 2) {
+                    qDebug() << "TUTUTU";
+                }
+
+                // Walidacja nr 1
+                if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), color) == true) {
+                    // Wykonanie ruchu na buforowej szachownicy
+                    bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
+
+                    //if (piece == 'P' && col == 7 && rank == 3) {
+                    //    qDebug() << "TUTUTU";
+                    //}
+
+                    // Walidacja nr 2
+                    if (bufferBoard()->isCheck(color) == false) {
+                        copyBoardToBuffer();    // ????????????????????
+                        checkMate = false;
+                        goto exit;
+                    }
+                    // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
+                    copyBoardToBuffer();
+                }
+            }
+        }
+    }
 
     exit:
     return checkMate;

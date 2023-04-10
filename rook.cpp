@@ -9,6 +9,12 @@ Rook::Rook(QObject *parent)
 
 bool Rook::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color) {
 
+    if (colFrom > 8 || rankFrom > 8 || colFrom < 1 || rankFrom < 1 ||
+        colTo > 8 || rankTo > 8 || colTo < 1 || rankTo < 1)
+    {
+        return false;
+    }
+
     bool validOk = true;
 
     // Tylko ruchy lewo-prawo
