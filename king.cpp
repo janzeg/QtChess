@@ -10,8 +10,6 @@ bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
 {
     bool validOk = true;
 
-    // Jeszcze dodać warunek, że król nie może szachować króla przeciwnika !!!
-
     if ((rankTo != rankFrom && rankTo != rankFrom + 1 && rankTo != rankFrom - 1) ||
         (colTo != colFrom && colTo != colFrom + 1 && colTo != colFrom - 1))
     {
@@ -21,6 +19,20 @@ bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
     // Bicie
     if (color == board->getColor(colTo, rankTo) || tolower(board->data(colTo, rankTo)) == 'k') {
         validOk = false;
+    }
+
+    // Sprawdzam pozycję króla o przeciwnym kolorze
+    char king = 'K';
+    if (color == 'w') {
+        king = tolower(king);
+    }
+    int kingCol, kingRank;
+    board->getPiecePosition(king, kingCol, kingRank);
+    // Król nie może szachować króla przeciwnika
+    if (rankTo == kingRank + 1 || rankTo == kingRank || rankTo == kingRank - 1)    {
+        if (colTo == kingCol - 1 || colTo == kingCol || colTo == kingCol + 1) {
+            validOk = false;
+        }
     }
 
     return validOk;

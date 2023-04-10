@@ -146,7 +146,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         break;
     }
 
-    // Sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury
+    // Walidacja nr 1 - sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury i ułożenia innych figur na szachownicy
     if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), color) == true)  {
         // Wykonanie ruchu na buforowej szachownicy
         bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
@@ -155,7 +155,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         return 0;
     }
 
-    // Sprawdzenie czy ruch nie powoduje szacha na graczu, który wykonuje ruch (odsłonięcia króla na szach)
+    // Walidacja nr 2 - sprawdzenie czy ruch nie powoduje szacha na graczu, który wykonuje ruch (odsłonięcia króla na szach)
     if (bufferBoard()->isCheck(currentPlayer()) == true) {
         // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
         copyBoardToBuffer();
@@ -164,6 +164,27 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
     // Jeżeli walidacja przeszła pomyślnie to można wykonać ruch już na rzeczywistej szachownicy
     board()->movePiece(colFrom, rankFrom, colTo, rankTo);
+    // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
+    copyBoardToBuffer();
+
+
+    char oppositePlayer;
+    if (currentPlayer() == 'w') {
+        oppositePlayer = 'b';
+    }
+    else {
+         oppositePlayer = 'w';
+    }
+
+
+    // Sprawdzenie czy jest szach
+    if (board()->isCheck(oppositePlayer) == true) {
+        qDebug() << "SZACH NA " << char(oppositePlayer) << "!!!!!!";
+        // Sprawdzenie czy jest mat
+        if (isCheckMate(oppositePlayer) == true) {
+            qDebug() << "MAT NA " << char(oppositePlayer) << "!!!!!!";
+        }
+    }
 
     if (currentPlayer() == PlayerWhite) {
         setCurrentPlayer(PlayerBlack);
@@ -177,8 +198,53 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
 bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
 {
-    qDebug() << "ChessAlgorithm::move";
+    //qDebug() << "ChessAlgorithm::move";
     return move(from.x(), from.y(), to.x(), to.y());
 }
 
+bool ChessAlgorithm::isCheckMate(char color) {
 
+    // Color - kolor gracza, dla którego sprawdzam czy jest mat
+
+    bool checkMate = true;
+
+    char king = 'k';
+    if (color == 'w') {
+        king = toupper(king);
+    }
+    int kingCol, kingRank;
+    board()->getPiecePosition(king, kingCol, kingRank);
+
+
+    // Sprawdzenie czy król może uciec od szacha
+    for (int col = kingCol - 1; col <= kingCol + 1; col++) {
+        for (int rank = kingRank - 1; rank <= kingRank + 1; rank++) {
+            // Walidacja nr 1
+            if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), bufferBoard(), color) == true) {
+                // Wykonanie ruchu na buforowej szachownicy
+                bufferBoard()->movePiece(kingCol, kingRank, col, rank);
+                // Walidacja nr 2
+                if (bufferBoard()->isCheck(color) == false) {
+                    checkMate = false;
+                    goto exit;
+                }
+                // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
+                copyBoardToBuffer();
+            }
+        }
+    }
+
+    // Sprawdzenie czy jakikolwiek ruch gracza pozwoli uniknąć szacha
+
+
+
+    exit:
+    return checkMate;
+
+    /* // Król nie może szachować króla przeciwnika
+    if (rankTo == kingRank + 1 || rankTo == kingRank || rankTo == kingRank - 1)    {
+        if (colTo == kingCol - 1 || colTo == kingCol || colTo == kingCol + 1) {
+            validOk = false;
+        }
+    }*/
+}

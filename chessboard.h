@@ -27,6 +27,8 @@ public:
 
     void setBoardData(const QVector<char> &newBoardData);
 
+
+
 signals:
     void ranksChanged(int);
     void columnsChanged(int);

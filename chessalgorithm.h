@@ -36,6 +36,8 @@ public:
     Rook rook() const;
     ChessBoard* bufferBoard() const; // ???????
 
+    bool isCheckMate(char color);
+
 signals:
     void boardChanged(ChessBoard*);
     void gameOver(ChessAlgorithm::Result);

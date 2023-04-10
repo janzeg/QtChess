@@ -170,15 +170,6 @@ QVector<char> ChessBoard::boardData() const
 
 bool ChessBoard::isCheck(char color) {
 
-    // Na razie testy algorytmu wykrywania szacha dla czarnego króla
-    // Potem trzeba będzie rozdzielić to w zależności do koloru figury:
-    // jeżeli ruch wykonują białe to sprawdzam szacha dla czarnego króla i odwrotnie.
-    // Potem też trzeba będzie przy walidacji sprawdzać czy dany ruch nie powoduje szacha (odsłonięcie króla na szach)
-    // w tym celu trzeba będzie przekazywać potencjalny stan tablicy do tej funkcji jako parametr
-    // i będzie ona weryfikować czy dany potencjalny ruch (powodujący przekazane rozłożenie figur) powoduje szach
-    // (tym razem na królu koloru tego samego co figura, która się rusza).
-
-
     // Parametr color - mówi czy sprawdzamy szach na czarnych czy na białych
     char king = 'k';
     char queen = 'Q';
@@ -294,7 +285,7 @@ bool ChessBoard::isCheck(char color) {
         }
     }
     if ((piece.topLeft == queen || piece.topLeft == bishop) ||
-        (color == 'w' && piece.topLeft == pawn))
+        (color == 'w' && piece.topLeft == pawn && j == 1))
     {
         check.topLeft = true;
     }
@@ -314,7 +305,7 @@ bool ChessBoard::isCheck(char color) {
         }
     }
     if ((piece.topRight == queen || piece.topRight == bishop) ||
-        (color == 'w' && piece.topRight == pawn))
+        (color == 'w' && piece.topRight == pawn && j == 1))
     {
         check.topRight = true;
     }
@@ -334,7 +325,7 @@ bool ChessBoard::isCheck(char color) {
         }
     }
     if ((piece.bottomLeft == queen || piece.bottomLeft == bishop) ||
-        (color == 'b' && piece.bottomLeft == pawn))
+        (color == 'b' && piece.bottomLeft == pawn && j == 1))
     {
         check.bottomLeft = true;
     }
@@ -354,7 +345,7 @@ bool ChessBoard::isCheck(char color) {
         }
     }
     if ((piece.bottomRight == queen || piece.bottomRight == bishop) ||
-        (color == 'b' && piece.bottomRight == pawn))
+        (color == 'b' && piece.bottomRight == pawn && j == 1))
     {
         check.bottomRight = true;
     }
@@ -377,7 +368,7 @@ bool ChessBoard::isCheck(char color) {
     else {
         check.knight = false;
     }
-
+    /*
     qDebug() << " CHECK Right - " << check.right;
     qDebug() << " CHECK Left - " << check.left;
     qDebug() << " CHECK Top - " << check.top;
@@ -386,7 +377,7 @@ bool ChessBoard::isCheck(char color) {
     qDebug() << " CHECK TopRight - " << check.topRight;
     qDebug() << " CHECK BottomLeft - " << check.bottomLeft;
     qDebug() << " CHECK BottomRight - " << check.bottomRight;
-    qDebug() << " CHECK Knight - " << check.knight;
+    qDebug() << " CHECK Knight - " << check.knight;*/
 
     if (check.right || check.left || check.top || check.bottom || check.topLeft ||
         check.topRight || check.bottomLeft || check.bottomRight || check.knight)
