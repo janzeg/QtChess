@@ -21,6 +21,12 @@ class ChessAlgorithm : public QObject
 public:
     enum Result { NoResult, PlayerWhiteWins, Draw, PlayerBlackWins };
     enum Player { NoPlayer = ' ', PlayerWhite = 'w', PlayerBlack = 'b' };
+    struct castlingCondType {
+        bool wKingMoved = false;
+        bool wRookMoved = false;
+        bool bKingMoved = false;
+        bool bRookMoved = false;
+    };
 
     explicit ChessAlgorithm(QObject *parent = 0);
     ChessBoard* board() const;
@@ -38,6 +44,14 @@ public:
 
     bool isCheckMate(char color);
     void setCurrentPiece(char newCurrentPiece);
+    bool isDeadLock(char color);
+
+    bool validCastling(int colFrom, int rankFrom, int colTo, int rankTo, char color);
+
+
+    castlingCondType castlingCond() const;
+
+    void setCastlingCond(char piece, bool value);
 
 signals:
     void boardChanged(ChessBoard*);
@@ -71,6 +85,8 @@ private:
     King m_king;
     void copyBoardToBuffer();
     void copyBufferToBoard();
+    castlingCondType m_castlingCond;
+
 };
 
 #endif // CHESSALGORITHM_H

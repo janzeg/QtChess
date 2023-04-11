@@ -22,7 +22,9 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
 
     case 'w':
         // Ruch do przodu
-        if ((rankFrom == 2) && (colTo == colFrom && rankTo == rankFrom + 2) && (board->data(colTo, rankTo) == ' ')) {
+        if ((rankFrom == 2) && (colTo == colFrom && rankTo == rankFrom + 2) &&
+            (board->data(colTo, rankTo) == ' ') && (board->data(colTo, rankTo - 1) == ' '))
+        {
             validOk = true;
         }
         if ((colTo == colFrom && rankTo == rankFrom + 1) && (board->data(colTo, rankTo) == ' ')) {
@@ -37,7 +39,8 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
 
     case 'b':
         // Ruch do przodu
-        if ((rankFrom == 7) && (colTo == colFrom && rankTo == rankFrom - 2) && (board->data(colTo, rankTo) == ' ')) {
+        if ((rankFrom == 7) && (colTo == colFrom && rankTo == rankFrom - 2) &&
+            (board->data(colTo, rankTo) == ' ') && (board->data(colTo, rankTo + 1) == ' ')) {
             validOk = true;
         }
         if ((colTo == colFrom && rankTo == rankFrom - 1) && (board->data(colTo, rankTo) == ' ')) {

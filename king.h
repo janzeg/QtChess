@@ -2,6 +2,7 @@
 #define KING_H
 
 #include "piece.h"
+#include "QDebug"
 
 class King : public Piece
 {

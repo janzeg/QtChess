@@ -9,8 +9,6 @@ class Pawn : public Piece
 public:
     explicit Pawn(QObject *parent = nullptr);
     bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color);
-
-
 };
 
 #endif // PAWN_H
