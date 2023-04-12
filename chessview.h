@@ -21,6 +21,9 @@ public:
     QPoint fieldAt(const QPoint &pt) const; // nie wiem czy na pewno public???
     void mouseReleaseEvent(QMouseEvent *event); // nie wiem czy na pewno public???
 
+    void addLabel(); // TESTY
+    void setSideBar(); // TESTY
+
     class Highlight {
     public:
         Highlight() {}
