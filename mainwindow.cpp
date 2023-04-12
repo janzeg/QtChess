@@ -52,8 +52,7 @@ void MainWindow::viewClicked(const QPoint &field)
         }
     } else {
         if(field != m_clickPoint){
-            m_algorithm->move(m_clickPoint, field); // F&H
-            //m_view->board()->movePiece(m_clickPoint.x(), m_clickPoint.y(), field.x(), field.y());
+            m_algorithm->move(m_clickPoint, field);
         }
         m_clickPoint = QPoint();
         m_view->removeHighlight(m_selectedField);

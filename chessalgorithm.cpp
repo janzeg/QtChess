@@ -174,16 +174,15 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     // Ustawienie aktualnej figury
     setCurrentPiece(piece);
 
-    // OPARŁEM TO NA ZŁYM ZAŁOŻENIU - KRÓL MUSI RUSZAĆ SIĘ NA G ALBO NA C, A NIE NA WIEŻĘ
-    // SPRAWDZAĆ TEŻ GDZIE KRÓL STOI I WTEDY JEST PEŁNA WSTĘPNA WALIDACJA !!!
+
     // Przypadek specjalny - próba wykonania roszady (oddzielna walidacja)
     bool castlingTry = false;
-    if ((piece == 'k' && board()->data(colTo, rankTo) == 'r') ||
-        (piece == 'K' && board()->data(colTo, rankTo) == 'R'))
+    if ((piece == 'K' && colFrom == 5 && rankFrom == 1 && (colTo == 7 || colTo == 3)) ||
+        (piece == 'k' && colFrom == 5 && rankFrom == 8 && (colTo == 7 || colTo == 3)))
     {
+        qDebug() << "PRÓBA ROSZADY";
         castlingTry = true;
     }
-
 
     // Walidacja nr 1 - sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury i ułożenia innych figur na szachownicy
     if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), color) == true)  {
@@ -191,17 +190,17 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
     else if (castlingTry == true) {
-        ;
+        // Walidacja roszady
+        if (validCastling(colFrom, rankFrom, colTo, rankTo, color) == true) {
+            // Wykonanie ruchu na buforowej szachownicy
+            bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
+        }
+        else {
+            return 0;
+        }
     }
     else {
         return 0;
-    }
-
-    // Walidacja roszady
-    if (castlingTry == true) {
-        if (validCastling(colFrom, rankFrom, colTo, rankTo, color) == false) {
-            return 0;
-        };
     }
 
     // Walidacja nr 2 - sprawdzenie czy ruch nie powoduje szacha na graczu, który wykonuje ruch (odsłonięcia króla na szach)
@@ -213,6 +212,19 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
     // Jeżeli walidacja przeszła pomyślnie to można wykonać ruch już na rzeczywistej szachownicy
     board()->movePiece(colFrom, rankFrom, colTo, rankTo);
+
+    // Przy roszadzie również ruch wieżą
+    if (castlingTry == true) {
+        // Krótka
+        if (colTo == 7) {
+            board()->movePiece(8, rankFrom, colTo - 1, rankTo);
+        }
+        // Długa
+        else if (colTo == 3) {
+            board()->movePiece(1, rankFrom, colTo + 1, rankTo);
+        }
+    }
+
     // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
     copyBoardToBuffer();
 
@@ -272,83 +284,44 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
 
     bool castlingOk = true;
 
-    struct {
-        bool shortC = false;
-        bool longC = false;
-    } castlingType;
-
-
-    int kingCol, kingRank;
-    int rookCol, rookRank;
-
     copyBoardToBuffer();
 
+    enum castlingType {shortC = 1, longC =  2} castlingVariant;
+
+    // Określenie typu roszady (krótka/długa)
+    if (colTo == 7) {
+        castlingVariant = shortC;
+    }
+    else if (colTo == 3) {
+        castlingVariant = longC;
+    }
+
     if (color == 'w') {
-        // Sprawdzenie czy król i wieża stoją w odpowiednim miejscu
-        board()->getPiecePosition('K', kingCol, kingRank);
-
-        // ZROBIĆ TO W DRUGĄ STRONĘ !!!!!
-        //board()->data()
-        // CZY PRÓBA ROSZADY KRÓTKIEJ CZY DŁUGIEJ SPRAWDZAĆ NA PODSTAWIE colTo i dopiero potem walidować czy pozycje są okej
-
-        // nie muszę sprawdzać czy, król stoi w odpowiednim miesjcu. Wystarczy, że sprawdze, że się nie ruszał i tak samo wieża !!!!!!
-
-        //board()->getPiecePosition('R', rookCol, rookRank); TU JEST PROBLEM, BO PRZECIEŻ JEST DRUGA WIEŻA !!!!
-        if (kingCol == 5 && kingRank == 1 && rookCol == 8 && rookRank == 1) {
-            qDebug() << "!!!!! ROSZADAAAAA KRÓTKAAAA !!!!!";
-            castlingType.shortC = true;
-        }
-        else if (kingCol == 5 && kingRank == 1 && rookCol == 1 && rookRank == 1) {
-            castlingType.longC = true;
-            qDebug() << "!!!!! ROSZADAAAAA DŁUUUUUGA !!!!!";
-        }
-        else {
-
-            return false;
-        }
-
         // Sprawdzenie czy król lub wieża wykonały już ruch w tej partii
         if (castlingCond().wKingMoved == true || castlingCond().wRookMoved == true) {
             return false;
         }
-
-    } else if (color == 'b') {
-
-        // Sprawdzenie czy król i wieża stoją w odpowiednim miejscu
-        board()->getPiecePosition('k', kingCol, kingRank);
-        board()->getPiecePosition('r', rookCol, rookRank);
-        if (kingCol == 5 && kingRank == 8 && rookCol == 8 && rookRank == 8) {
-            castlingType.shortC = true;
-        }
-        else if (kingCol == 5 && kingRank == 8 && rookCol == 1 && rookRank == 8) {
-            castlingType.longC = true;
-        }
-        else {
-            qDebug() << "!!!!! ROSZADA - ZŁE POZYCJE !!!!!";
-            return false;
-        }
-
+    }
+    else if (color == 'b') {
         // Sprawdzenie czy król lub wieża wykonały już ruch w tej partii
-        if (castlingCond().wKingMoved == true || castlingCond().wRookMoved == true) {
-            qDebug() << "!!!!! ROSZADA - WYKONANO JUŻ RUCH !!!!!";
+        if (castlingCond().bKingMoved == true || castlingCond().bRookMoved == true) {
             return false;
         }
     }
 
-
-    if (castlingType.shortC == true) {
+    if (castlingVariant == shortC) {
         // Sprawdzenie czy między królem a wieżą nie ma innych figur oraz ...
         // ... sprawdzenie czy pola przez, które przejdzie król nie są atakowane przez przeciwnika
         for (int i = 1; i <= 2; i++) {
-            if (board()->data(kingCol + i, kingRank) != ' ') {
-                qDebug() << "!!!!! KRÓTKA !!!!!";
-                qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
+            if (board()->data(colFrom + i, rankFrom) != ' ') {
+                //qDebug() << "!!!!! KRÓTKA !!!!!";
+                //qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
                 return false;
             }
-            bufferBoard()->movePiece(kingCol, kingRank, kingCol + i, kingRank);
+            bufferBoard()->movePiece(colFrom, rankFrom, colFrom + i, rankFrom);
             if (bufferBoard()->isCheck(color) == true) {
                 copyBoardToBuffer();
-                qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
+                //qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
                 return false;
             }
             else {
@@ -356,18 +329,19 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
             }
         }
     }
-    else if (castlingType.longC == true) {
+    else if (castlingVariant == longC) {
         // Sprawdzenie czy między królem a wieżą nie ma innych figur oraz ...
         // ... sprawdzenie czy pola przez, które przejdzie król nie są atakowane przez przeciwnika
         for (int i = 1; i <= 3; i++) {
-            if (board()->data(kingCol - i, kingRank) != ' ') {
-                qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
+            if (board()->data(colFrom - i, rankFrom) != ' ') {
+                //qDebug() << "!!!!! DŁUGA !!!!!";
+                //qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
                 return false;
             }
-            bufferBoard()->movePiece(kingCol, kingRank, kingCol - i, kingRank);
+            bufferBoard()->movePiece(colFrom, rankFrom, colFrom + i, rankFrom);
             if (bufferBoard()->isCheck(color) == true) {
                 copyBoardToBuffer();
-                qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
+                //qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
                 return false;
             }
             else {
@@ -375,8 +349,6 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
             }
         }
     }
-
-    qDebug() << "!!!!! ROSZADA OK !!!!!";
 
     return castlingOk;
 }

@@ -22,7 +22,7 @@ bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
         validOk = false;
     }
 
-    // Bicie (uwaga tu wyjątek - roszada)
+    // Bicie
     if ((color == board->getColor(colTo, rankTo)) || tolower(board->data(colTo, rankTo)) == 'k') {
         validOk = false;
     }

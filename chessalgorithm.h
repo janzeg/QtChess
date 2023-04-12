@@ -28,6 +28,7 @@ public:
         bool bRookMoved = false;
     };
 
+
     explicit ChessAlgorithm(QObject *parent = 0);
     ChessBoard* board() const;
     inline Result result() const { return m_result; }
