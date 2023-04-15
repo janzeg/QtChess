@@ -10,10 +10,10 @@ class ChessView : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QSize fieldSize READ fieldSize WRITE setFieldSize NOTIFY fieldSizeChanged)
-
-
+    //Q_ENUMS(GameState)
 
 public:
+    //enum GameState { Normal, Check };
     explicit ChessView(QWidget *parent = nullptr);
     void setBoard(ChessBoard *board);
     ChessBoard* board() const;
@@ -26,7 +26,8 @@ public:
 
     void addLabel(); // TESTY
 
-    QLabel *label = new QLabel(this);
+    QLabel *currentPlayerLabel = new QLabel(this);
+    QLabel *gameStateLabel = new QLabel(this);
 
 
     class Highlight {

@@ -151,6 +151,19 @@ QString ChessBoard::currentPlayer() const
     return m_currentPlayer;
 }
 
+void ChessBoard::setGameState(GameState newGameState)
+{
+    if (m_gameState == newGameState)
+        return;
+    m_gameState = newGameState;
+    emit gameStateChanged(newGameState);
+}
+
+ChessBoard::GameState ChessBoard::gameState() const
+{
+    return m_gameState;
+}
+
 /*
 void ChessBoard::setMessage1(const QString &newMessage1)
 {

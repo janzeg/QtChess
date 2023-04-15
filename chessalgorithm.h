@@ -14,12 +14,13 @@
 class ChessAlgorithm : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Result Player)
+    Q_ENUMS(Result Player) //GameState)
     Q_PROPERTY(Result result READ result CONSTANT)
     Q_PROPERTY(Player currentPlayer READ currentPlayer NOTIFY currentPlayerChanged)
 
 public:
     enum Result { NoResult, PlayerWhiteWins, Draw, PlayerBlackWins };
+    //enum GameState { Normal, Check};
     enum Player { NoPlayer = ' ', PlayerWhite = 'w', PlayerBlack = 'b' };
     struct castlingCondType {
         bool wKingMoved = false;
@@ -34,8 +35,6 @@ public:
     inline Result result() const { return m_result; }
     inline Player currentPlayer() const { return m_currentPlayer; }
 
-    //bool move(int colFrom, int rankFrom, int colTo, int rankTo); // Nie wiem czy public
-    //bool move(const QPoint &from, const QPoint &to);
 
     Piece *currentPiece() const;
     void setCurrentPiece(Piece *newCurrentPiece);
@@ -49,10 +48,11 @@ public:
 
     bool validCastling(int colFrom, int rankFrom, int colTo, int rankTo, char color);
 
-
     castlingCondType castlingCond() const;
 
     void setCastlingCond(char piece, bool value);
+
+
 
 signals:
     void boardChanged(ChessBoard*);
@@ -69,7 +69,6 @@ protected:
     void setBoard(ChessBoard *board);
     void setResult(Result);
     void setCurrentPlayer(Player);
-
     void setBufferBoard(ChessBoard *bufferBoard); // ???????
 
 private:

@@ -9,8 +9,10 @@ class ChessBoard : public QObject
     // Sygnały ranksChanged/columnsChanged informują o zmianie wartości ranks/columns
     Q_PROPERTY(int ranks READ ranks NOTIFY ranksChanged)
     Q_PROPERTY(int columns READ columns NOTIFY columnsChanged)
+    Q_ENUMS(GameState)
 
 public:
+    enum GameState { Normal, Check };
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
     int columns() const;
@@ -36,13 +38,19 @@ public:
 
     QString currentPlayer() const;
 
+
+
+    void setGameState(GameState newGameState);
+
+    GameState gameState() const;
+
 signals:
     void ranksChanged(int);
     void columnsChanged(int);
     void boardReset();
     void dataChanged(int c, int r);
-    //void message1Changed();
     void currentPlayerChanged();
+    void gameStateChanged(ChessBoard::GameState);
 
 private:
     int m_ranks;
@@ -57,6 +65,8 @@ private:
      * Pionek   - P         p */
     QVector<char> m_boardData;
     QString m_currentPlayer;
+    GameState m_gameState;
+
 
 protected:
     void setRanks(int newRanks);

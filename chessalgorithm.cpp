@@ -86,7 +86,9 @@ void ChessAlgorithm::copyBoardToBuffer()
 void ChessAlgorithm::copyBufferToBoard()
 {
     board()->setBoardData(bufferBoard()->boardData());
+
 }
+
 
 void ChessAlgorithm::setCastlingCond(char piece, bool value)
 {
@@ -250,11 +252,15 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     // Sprawdzenie czy jest szach na graczu przeciwnym
     if (board()->isCheck(oppositePlayer) == true) {
         qDebug() << "SZACH NA " << char(oppositePlayer) << "!!!!!!";
+        board()->setGameState(ChessBoard::Check);
         // Sprawdzenie czy jest mat
         if (isCheckMate(oppositePlayer) == true) {
             qDebug() << "MAT NA " << char(oppositePlayer) << "!!!!!!";
             return 0;
         }
+    }
+    else {
+        board()->setGameState(ChessBoard::Normal);
     }
 
     // Sprawdzenie czy któryś z graczy jest w pacie

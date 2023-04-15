@@ -24,6 +24,7 @@ void ChessView::setBoard(ChessBoard *board)
         //connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
         //connect(board, SIGNAL(boardReset()), this, SLOT(update()));
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
+        connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(setSideBar())); // testy
     }
 
     setSideBar();
@@ -203,20 +204,36 @@ void ChessView::drawHighlights(QPainter *painter)
 
 void ChessView::addLabel()
 {
+    QFont f( "Arial", 14, QFont::Bold);
+    currentPlayerLabel->setFont(f);
+    currentPlayerLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    currentPlayerLabel->setAlignment(Qt::AlignCenter);
+    currentPlayerLabel->setGeometry(QRect(450,10,120,40));
 
-
-    label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
     QString currentPlayer = board()->currentPlayer();
-
     if (currentPlayer == "") {
         currentPlayer = "BIAŁE";
     }
+    currentPlayerLabel->setText(currentPlayer);
 
-    label->setText(currentPlayer); // get? dać potem jak private
+
+    gameStateLabel->setFont(f);
+    gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    gameStateLabel->setAlignment(Qt::AlignCenter);
+    gameStateLabel->setGeometry(QRect(450,80,120,40));
 
 
-    label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
-    //Here is how to change position:
-    label->setGeometry(QRect(450,10,120,60));
+    ChessBoard::GameState currentGameState = board()->gameState();
+    QString currentGameStateText;
+    if (currentGameState == ChessBoard::Check) {
+        currentGameStateText = "SZACH";
+    }
+    else {
+        currentGameStateText = "";
+    }
+
+    gameStateLabel->setText(currentGameStateText);
+
+
 }
