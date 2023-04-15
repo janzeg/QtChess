@@ -66,6 +66,14 @@ void ChessAlgorithm::setCurrentPlayer(Player value)
     if(currentPlayer() == value) return;
     m_currentPlayer = value;
     emit currentPlayerChanged(m_currentPlayer);
+
+    // testy
+    if (currentPlayer() == PlayerWhite) {
+        board()->setCurrentPlayer("BIAŁE");
+    }
+    else {
+        board()->setCurrentPlayer("CZARNE");
+    }
 }
 
 void ChessAlgorithm::copyBoardToBuffer()
@@ -77,9 +85,7 @@ void ChessAlgorithm::copyBoardToBuffer()
 
 void ChessAlgorithm::copyBufferToBoard()
 {
-    //board()->m_boardData = bufferBoard()->m_boardData;
     board()->setBoardData(bufferBoard()->boardData());
-    //m_board = m_bufferBoard;
 }
 
 void ChessAlgorithm::setCastlingCond(char piece, bool value)
@@ -180,7 +186,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     if ((piece == 'K' && colFrom == 5 && rankFrom == 1 && (colTo == 7 || colTo == 3)) ||
         (piece == 'k' && colFrom == 5 && rankFrom == 8 && (colTo == 7 || colTo == 3)))
     {
-        qDebug() << "PRÓBA ROSZADY";
+        //qDebug() << "PRÓBA ROSZADY";
         castlingTry = true;
     }
 
@@ -462,11 +468,11 @@ bool ChessAlgorithm::isDeadLock(char color) {
                         if (bufferBoard()->isCheck(color) == false) {
                             copyBoardToBuffer();
 
-                            qDebug() << "pieceCol - " << pieceCol;
-                            qDebug() << "pieceRank - " << pieceRank;
-                            qDebug() << "piece - " << piece;
-                            qDebug() << "col - " << col;
-                            qDebug() << "rank - " << rank;
+                            //qDebug() << "pieceCol - " << pieceCol;
+                            //qDebug() << "pieceRank - " << pieceRank;
+                            //qDebug() << "piece - " << piece;
+                            //qDebug() << "col - " << col;
+                            //qDebug() << "rank - " << rank;
 
                             deadLock = false;
                             goto exit;

@@ -4,11 +4,14 @@
 #include <QWidget>
 #include "chessboard.h"
 #include <QPointer>
+#include <QLabel>
 
 class ChessView : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QSize fieldSize READ fieldSize WRITE setFieldSize NOTIFY fieldSizeChanged)
+
+
 
 public:
     explicit ChessView(QWidget *parent = nullptr);
@@ -22,7 +25,9 @@ public:
     void mouseReleaseEvent(QMouseEvent *event); // nie wiem czy na pewno public???
 
     void addLabel(); // TESTY
-    void setSideBar(); // TESTY
+
+    QLabel *label = new QLabel(this);
+
 
     class Highlight {
     public:
@@ -44,6 +49,7 @@ public:
         QPoint m_field;
         QColor m_color;
     };
+
 
     void addHighlight(Highlight *hl);
     void removeHighlight(Highlight *hl);
@@ -70,6 +76,9 @@ protected:
     virtual void drawColumn(QPainter *painter, int column);
     virtual void drawField(QPainter *painter, int column, int rank);
     virtual void drawPiece(QPainter *painter, int column, int rank);
+
+public slots:
+    void setSideBar(); // TESTY
 };
 
 

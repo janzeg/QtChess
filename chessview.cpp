@@ -21,8 +21,9 @@ void ChessView::setBoard(ChessBoard *board)
     m_board = board;
     // Utworzenie połączeń
     if(board){
-        connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
-        connect(board, SIGNAL(boardReset()), this, SLOT(update()));
+        //connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
+        //connect(board, SIGNAL(boardReset()), this, SLOT(update()));
+        connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
     }
 
     setSideBar();
@@ -202,9 +203,19 @@ void ChessView::drawHighlights(QPainter *painter)
 
 void ChessView::addLabel()
 {
-    QLabel *label = new QLabel(this);
+
+
     label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    label->setText("first line\nsecond line");
+
+    QString currentPlayer = board()->currentPlayer();
+
+    if (currentPlayer == "") {
+        currentPlayer = "BIAŁE";
+    }
+
+    label->setText(currentPlayer); // get? dać potem jak private
+
+
     label->setAlignment(Qt::AlignBottom | Qt::AlignRight);
     //Here is how to change position:
     label->setGeometry(QRect(450,10,120,60));

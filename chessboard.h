@@ -29,12 +29,20 @@ public:
 
     char getColor(char piece);
 
+    void setMessage1(const QString &newMessage1);
+    QString getMessage1() const;
+
+    void setCurrentPlayer(const QString &newCurrentPlayer);
+
+    QString currentPlayer() const;
 
 signals:
     void ranksChanged(int);
     void columnsChanged(int);
     void boardReset();
     void dataChanged(int c, int r);
+    //void message1Changed();
+    void currentPlayerChanged();
 
 private:
     int m_ranks;
@@ -48,6 +56,7 @@ private:
      * Skoczek  - N         n
      * Pionek   - P         p */
     QVector<char> m_boardData;
+    QString m_currentPlayer;
 
 protected:
     void setRanks(int newRanks);
