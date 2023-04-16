@@ -25,11 +25,17 @@ public:
     QPoint fieldAt(const QPoint &pt) const; // nie wiem czy na pewno public???
     void mouseReleaseEvent(QMouseEvent *event); // nie wiem czy na pewno public???
 
-    void addLabel(); // TESTY
+    void setSideBar();
 
     QLabel *currentPlayerLabel = new QLabel(this);
     QLabel *gameStateLabel = new QLabel(this);
     QPushButton *newGameButton = new QPushButton(this);
+
+    QPushButton *queenButton = new QPushButton(this);
+    QPushButton *rookButton = new QPushButton(this);
+    QPushButton *bishopButton = new QPushButton(this);
+    QPushButton *knightButton = new QPushButton(this);
+    QLabel *promotionLabel = new QLabel(this);
 
 
     class Highlight {
@@ -82,8 +88,10 @@ protected:
     virtual void drawPiece(QPainter *painter, int column, int rank);
 
 public slots:
-    void setSideBar(); // TESTY
+    void updateLabels(); // TESTY
     //void newGameButtonClicked() {qDebug () << "Button clicked";};
+    void showPromotionButtons();
+    void hidePromotionButtons();
 };
 
 

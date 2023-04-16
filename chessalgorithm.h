@@ -56,6 +56,7 @@ public:
 
 
 
+
 signals:
     void boardChanged(ChessBoard*);
     void gameOver(ChessAlgorithm::Result);

@@ -6,7 +6,7 @@ ChessAlgorithm::ChessAlgorithm(QObject *parent)
     : QObject{parent}
 {
     m_board = nullptr;
-    m_bufferBoard = nullptr; // ?????
+    m_bufferBoard = nullptr;
     m_currentPlayer = PlayerWhite;
     m_result = NoResult;
 }
@@ -23,6 +23,8 @@ ChessBoard *ChessAlgorithm::bufferBoard() const
 
 void ChessAlgorithm::setBoard(ChessBoard *board)
 {
+    // tu będzie sporo do wywalenia (zobaczyć jak było wcześniej)
+
     if(board == m_board) return;
     if(m_board) {
         m_board->disconnect();
@@ -30,10 +32,9 @@ void ChessAlgorithm::setBoard(ChessBoard *board)
     }
     m_board = board;
     if (board) {
-        connect(board, SIGNAL(startNewGame()), this, SLOT(newGame())); // testy
+        //connect(board, SIGNAL(promotionPieceReady()), this, SLOT(newGame())); // testy
     }
     emit boardChanged(m_board);
-
 }
 
 void ChessAlgorithm::setBufferBoard(ChessBoard *bufferBoard)    // ??????
@@ -74,20 +75,17 @@ void ChessAlgorithm::setCurrentPlayer(Player value)
     m_currentPlayer = value;
     emit currentPlayerChanged(m_currentPlayer);
 
-    // testy
     if (currentPlayer() == PlayerWhite) {
-        board()->setCurrentPlayer("BIAŁE");
+        board()->setCurrentPlayer("RUCH - BIAŁE");
     }
     else {
-        board()->setCurrentPlayer("CZARNE");
+        board()->setCurrentPlayer("RUCH - CZARNE");
     }
 }
 
 void ChessAlgorithm::copyBoardToBuffer()
 {
-    //bufferBoard()->m_boardData = board()->m_boardData;
     bufferBoard()->setBoardData(board()->boardData());
-    //m_bufferBoard = m_board;
 }
 
 void ChessAlgorithm::copyBufferToBoard()
@@ -95,7 +93,6 @@ void ChessAlgorithm::copyBufferToBoard()
     board()->setBoardData(bufferBoard()->boardData());
 
 }
-
 
 void ChessAlgorithm::setCastlingCond(char piece, bool value)
 {
@@ -117,12 +114,6 @@ ChessAlgorithm::castlingCondType ChessAlgorithm::castlingCond() const
 {
     return m_castlingCond;
 }
-
-/*
-Pawn ChessAlgorithm::pawn() const
-{
-    return m_pawn;
-}*/
 
 void ChessAlgorithm::setCurrentPiece(Piece *newCurrentPiece)
 {
@@ -159,17 +150,17 @@ Piece *ChessAlgorithm::currentPiece() const
     return m_currentPiece;
 }
 
-bool ChessAlgorithm::move(int colFrom, int rankFrom,
-                          int colTo, int rankTo)
+bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 {
-    //Q_UNUSED(colFrom)
-    //Q_UNUSED(rankFrom)
-    //Q_UNUSED(colTo)
-    //Q_UNUSED(rankTo)
+    if (board()->gameState() == ChessBoard::CheckMate) {
+        return 0;;
+    }
+
+    if (board()->promotion() == true) {
+        return 0;
+    }
 
     copyBoardToBuffer();
-
-    qDebug() << " --- AKTUALNY GRACZ --- : " << char(currentPlayer());
 
     // Określenie jaka figura została wybrana
     char piece = board()->data(colFrom, rankFrom);
@@ -195,7 +186,6 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
     if ((piece == 'K' && colFrom == 5 && rankFrom == 1 && (colTo == 7 || colTo == 3)) ||
         (piece == 'k' && colFrom == 5 && rankFrom == 8 && (colTo == 7 || colTo == 3)))
     {
-        //qDebug() << "PRÓBA ROSZADY";
         castlingTry = true;
     }
 
@@ -248,6 +238,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         setCastlingCond(piece, true);
     }
 
+    // Określenie przeciwnego gracza
     char oppositePlayer;
     if (currentPlayer() == 'w') {
         oppositePlayer = 'b';
@@ -258,11 +249,9 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
     // Sprawdzenie czy jest szach na graczu przeciwnym
     if (board()->isCheck(oppositePlayer) == true) {
-        qDebug() << "SZACH NA " << char(oppositePlayer) << "!!!!!!";
         board()->setGameState(ChessBoard::Check);
         // Sprawdzenie czy jest mat
         if (isCheckMate(oppositePlayer) == true) {
-            qDebug() << "MAT NA " << char(oppositePlayer) << "!!!!!!";
             board()->setGameState(ChessBoard::CheckMate);
             return 0;
         }
@@ -273,12 +262,18 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
     // Sprawdzenie czy któryś z graczy jest w pacie
     if (isDeadLock(PlayerWhite)) {
-        qDebug() << "PAT BIAŁE";
         return 0;
     }
     if (isDeadLock(PlayerBlack)) {
-        qDebug() << "PAT CZARNE";
         return 0;
+    }
+
+    // Sprawdzenie czy ma miejsce promocja
+    if ((piece == 'P' && rankTo == 8) || (piece == 'p' && rankTo == 1)) {
+        qDebug("PROMOCJA");
+        board()->setPromotion(true);
+        board()->promCol = colTo;
+        board()->promRank = rankTo;
     }
 
     // Zmiana gracza wykonującego ruch
@@ -294,7 +289,6 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
 
 bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
 {
-    //qDebug() << "ChessAlgorithm::move";
     return move(from.x(), from.y(), to.x(), to.y());
 }
 
@@ -481,13 +475,6 @@ bool ChessAlgorithm::isDeadLock(char color) {
                         // Walidacja nr 2
                         if (bufferBoard()->isCheck(color) == false) {
                             copyBoardToBuffer();
-
-                            //qDebug() << "pieceCol - " << pieceCol;
-                            //qDebug() << "pieceRank - " << pieceRank;
-                            //qDebug() << "piece - " << piece;
-                            //qDebug() << "col - " << col;
-                            //qDebug() << "rank - " << rank;
-
                             deadLock = false;
                             goto exit;
                         }

@@ -167,7 +167,33 @@ ChessBoard::GameState ChessBoard::gameState() const
     return m_gameState;
 }
 
+void ChessBoard::setPromotion(bool newPromotion)
+{
+    if (m_promotion == newPromotion)
+        return;
+    m_promotion = newPromotion;
+    emit promotionChanged();
+}
 
+bool ChessBoard::promotion() const
+{
+    return m_promotion;
+}
+
+void ChessBoard::setPromoteTo(Piece newPromoteTo)
+{
+    qDebug() << "HALOOO" << newPromoteTo;
+    m_promoteTo = newPromoteTo;
+    if (newPromoteTo == Queen) {
+        setData(promCol, promRank, 'Q');
+        setPromotion(false);
+    }
+}
+
+ChessBoard::Piece ChessBoard::promoteTo() const
+{
+    return m_promoteTo;
+}
 
 /*
 void ChessBoard::setMessage1(const QString &newMessage1)

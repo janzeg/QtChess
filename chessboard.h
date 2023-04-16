@@ -10,10 +10,11 @@ class ChessBoard : public QObject
     // Sygnały ranksChanged/columnsChanged informują o zmianie wartości ranks/columns
     Q_PROPERTY(int ranks READ ranks NOTIFY ranksChanged)
     Q_PROPERTY(int columns READ columns NOTIFY columnsChanged)
-    Q_ENUMS(GameState)
+    Q_ENUMS(GameState Piece)
 
 public:
     enum GameState { Normal, Check, CheckMate };
+    enum Piece { Queen };
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
     int columns() const;
@@ -32,8 +33,8 @@ public:
 
     char getColor(char piece);
 
-    void setMessage1(const QString &newMessage1);
-    QString getMessage1() const;
+    //void setMessage1(const QString &newMessage1);
+    //QString getMessage1() const;
 
     void setCurrentPlayer(const QString &newCurrentPlayer);
 
@@ -43,14 +44,16 @@ public:
 
     GameState gameState() const;
 
+    void setPromotion(bool newPromotion);
 
+    bool promotion() const;
 
-public slots:
-    void newGameButtonClicked() {
-        qDebug () << "Button clicked";
-        emit startNewGame();
-    };
+    Piece promoteTo() const;
 
+    // TESTY
+    int promCol;
+    int promRank;
+    // TESTY
 
 signals:
     void ranksChanged(int);
@@ -60,6 +63,10 @@ signals:
     void currentPlayerChanged();
     void gameStateChanged(ChessBoard::GameState);
     void startNewGame();
+    void promotionChanged();
+
+public slots:
+    void setPromoteTo(ChessBoard::Piece newPromoteTo);
 
 private:
     int m_ranks;
@@ -75,6 +82,8 @@ private:
     QVector<char> m_boardData;
     QString m_currentPlayer;
     GameState m_gameState;
+    bool m_promotion;
+    Piece m_promoteTo;
 
 
 

@@ -17,29 +17,69 @@ void ChessView::setBoard(ChessBoard *board)
     if(m_board) {
         // Rozłączenie wszystkich połączeń (signal-slot) między m_board i tym obiektem (this)
         m_board->disconnect(this);
-        qDebug() << "DISCONNECT";
+        //qDebug() << "DISCONNECT";
     }
     m_board = board;
     // Utworzenie połączeń
     if(board){
-        qDebug() << "NOWA PLANSZA ";
+        //qDebug() << "NOWA PLANSZA ";
         connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
         connect(board, SIGNAL(boardReset()), this, SLOT(update()));
-        //connect(board, SIGNAL(boardReset()), this, SLOT(setBoard())); // debug
-        connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
-        connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(setSideBar())); // testy
-        //QObject::connect(newGameButton, &QPushButton::clicked, board, &ChessBoard::newGameButtonClicked);
-        //connect(this, SIGNAL(testReset()), board, SLOT(newGameButtonClicked()));
+        connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(updateLabels()));
+        connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(updateLabels()));
+        connect(board, SIGNAL(promotionChanged()), this, SLOT(showPromotionButtons()));
+
+        connect(queenButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Queen); });
+
+        connect(queenButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
     }
 
     setSideBar();
-
     updateGeometry();
 }
 
 void ChessView::setSideBar()
 {
-    addLabel();
+    QFont f("Arial", 14, QFont::Bold);
+    currentPlayerLabel->setFont(f);
+    //currentPlayerLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    currentPlayerLabel->setAlignment(Qt::AlignCenter);
+    currentPlayerLabel->setGeometry(QRect(440,10,150,60));
+
+    gameStateLabel->setFont(f);
+    //gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    gameStateLabel->setAlignment(Qt::AlignCenter);
+    gameStateLabel->setGeometry(QRect(440,80,150,40));
+
+    newGameButton->setGeometry(QRect(440,360,150,40));
+    newGameButton->setFont(f);
+    newGameButton->setText("NOWA PARTIA");
+
+    QFont f3("Arial", 12, QFont::Bold);
+
+    promotionLabel->setFont(f3);
+    //gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    promotionLabel->setAlignment(Qt::AlignCenter);
+    promotionLabel->setGeometry(QRect(440,120,150,60));
+    promotionLabel->setText("PROMOCJA\nWybierz figurę:");
+
+    QFont f2("Arial", 10, QFont::Bold);
+    queenButton->setFont(f2);
+    queenButton->setGeometry(QRect(463,180,100,30));
+    queenButton->setText("Hetman");
+    rookButton->setFont(f2);
+    rookButton->setGeometry(QRect(463,220,100,30));
+    rookButton->setText("Wieża");
+    bishopButton->setFont(f2);
+    bishopButton->setGeometry(QRect(463,260,100,30));
+    bishopButton->setText("Goniec");
+    knightButton->setFont(f2);
+    knightButton->setGeometry(QRect(463,300,100,30));
+    knightButton->setText("Skoczek");
+
+    hidePromotionButtons();
+
+    updateLabels();
 }
 
 ChessBoard *ChessView::board() const
@@ -84,7 +124,6 @@ QRect ChessView::fieldRect(int column, int rank) const
 void ChessView::paintEvent(QPaintEvent *event)
 {
     if(!m_board) return;
-    //qDebug() << "NEW GAME - paintEvent ";
     QPainter painter(this);
     for (int r = m_board->ranks(); r > 0; --r) {
         painter.save();
@@ -123,8 +162,7 @@ void ChessView::drawRank(QPainter *painter, int rank)
 void ChessView::drawColumn(QPainter *painter, int column)
 {
     QRect r = fieldRect(column, 1);
-    QRect columnRect = QRect(r.left(), r.bottom(),
-                             r.width(), height()-r.bottom()).adjusted(0, 2, 0, -2);
+    QRect columnRect = QRect(r.left(), r.bottom(), r.width(), height()-r.bottom()).adjusted(0, 2, 0, -2);
     painter->drawText(columnRect, Qt::AlignHCenter | Qt::AlignTop, QChar('a'+column-1));
 }
 
@@ -209,35 +247,26 @@ void ChessView::drawHighlights(QPainter *painter)
     }
 }
 
-void ChessView::addLabel()
+void ChessView::updateLabels()
 {
-    QFont f( "Arial", 14, QFont::Bold);
-    currentPlayerLabel->setFont(f);
-    currentPlayerLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    currentPlayerLabel->setAlignment(Qt::AlignCenter);
-    currentPlayerLabel->setGeometry(QRect(440,10,150,60));
-
-
     QString currentPlayer = board()->currentPlayer();
     if (currentPlayer == "") {
-        currentPlayer = "BIAŁE";
+        currentPlayer = "RUCH - BIAŁE";
     }
-
-
-    gameStateLabel->setFont(f);
-    gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    gameStateLabel->setAlignment(Qt::AlignCenter);
-    gameStateLabel->setGeometry(QRect(440,80,150,40));
-
 
     ChessBoard::GameState currentGameState = board()->gameState();
     QString currentGameStateText;
     if (currentGameState == ChessBoard::Check) {
-        currentGameStateText = "SZACH";
+        currentGameStateText = "SZACH!";
     }
     else if (currentGameState == ChessBoard::CheckMate) {
         currentGameStateText = "SZACH MAT!";
-        currentPlayer = "BIAŁE\nWYGRYWAJĄ";
+        if (currentPlayer == "RUCH - BIAŁE") {
+            currentPlayer = "BIAŁE\nWYGRYWAJĄ!";
+        }
+        else {
+            currentPlayer = "CZARNE\nWYGRYWAJĄ!";
+        }
     }
     else {
         currentGameStateText = "";
@@ -245,22 +274,22 @@ void ChessView::addLabel()
 
     currentPlayerLabel->setText(currentPlayer);
     gameStateLabel->setText(currentGameStateText);
+}
 
+void ChessView::showPromotionButtons()
+{
+    promotionLabel->setVisible(true);
+    queenButton->setVisible(true);
+    rookButton->setVisible(true);
+    bishopButton->setVisible(true);
+    knightButton->setVisible(true);
+}
 
-    //QPushButton *newGameButton = new QPushButton(this);
-    //QFont f("Arial", 14, QFont::Bold);
-    newGameButton->setGeometry(QRect(440,360,150,40));
-    newGameButton->setFont(f);
-    newGameButton->setText("NOWA PARTIA");
-
-    //qDebug() << "NO HALO";
-
-    //QTextStream qtin(stdin);
-    //QString line = qtin.readLine();
-
-    //if (line == "TAK") {
-        //emit testReset();
-    //}
-
-
+void ChessView::hidePromotionButtons()
+{
+    promotionLabel->setVisible(false);
+    queenButton->setVisible(false);
+    rookButton->setVisible(false);
+    bishopButton->setVisible(false);
+    knightButton->setVisible(false);
 }
