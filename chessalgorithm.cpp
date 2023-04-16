@@ -77,10 +77,10 @@ void ChessAlgorithm::setCurrentPlayer(ChessBoard::Player value)
     emit currentPlayerChanged(m_currentPlayer);
 
     if (currentPlayer() == ChessBoard::PlayerWhite) {
-        board()->setCurrentPlayer("RUCH - BIAŁE");
+        board()->setCurrentPlayer(ChessBoard::PlayerWhite);
     }
     else {
-        board()->setCurrentPlayer("RUCH - CZARNE");
+        board()->setCurrentPlayer(ChessBoard::PlayerBlack);
     }
 }
 

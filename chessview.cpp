@@ -15,14 +15,12 @@ void ChessView::setBoard(ChessBoard *board)
 {
     if(m_board == board) return;
     if(m_board) {
-        // Rozłączenie wszystkich połączeń (signal-slot) między m_board i tym obiektem (this)
+        // Rozłączenie wszystkich połączeń z m_board
         m_board->disconnect(this);
-        //qDebug() << "DISCONNECT";
     }
     m_board = board;
     // Utworzenie połączeń
     if(board){
-        //qDebug() << "NOWA PLANSZA ";
         connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
         connect(board, SIGNAL(boardReset()), this, SLOT(update()));
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(updateLabels()));
@@ -47,29 +45,22 @@ void ChessView::setBoard(ChessBoard *board)
 void ChessView::setSideBar()
 {
     QFont f("Arial", 14, QFont::Bold);
+    QFont f2("Arial", 10, QFont::Bold);
+    QFont f3("Arial", 12, QFont::Bold);
+
     currentPlayerLabel->setFont(f);
-    //currentPlayerLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     currentPlayerLabel->setAlignment(Qt::AlignCenter);
     currentPlayerLabel->setGeometry(QRect(440,10,150,60));
-
     gameStateLabel->setFont(f);
-    //gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     gameStateLabel->setAlignment(Qt::AlignCenter);
     gameStateLabel->setGeometry(QRect(440,80,150,40));
-
     newGameButton->setGeometry(QRect(440,360,150,40));
     newGameButton->setFont(f);
     newGameButton->setText("NOWA PARTIA");
-
-    QFont f3("Arial", 12, QFont::Bold);
-
     promotionLabel->setFont(f3);
-    //gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     promotionLabel->setAlignment(Qt::AlignCenter);
     promotionLabel->setGeometry(QRect(440,120,150,60));
     promotionLabel->setText("PROMOCJA\nWybierz figurę:");
-
-    QFont f2("Arial", 10, QFont::Bold);
     queenButton->setFont(f2);
     queenButton->setGeometry(QRect(463,180,100,30));
     queenButton->setText("Hetman");
@@ -84,8 +75,6 @@ void ChessView::setSideBar()
     knightButton->setText("Skoczek");
 
     hidePromotionButtons();
-    //showPromotionButtons();
-
     updateLabels();
 }
 
@@ -256,9 +245,18 @@ void ChessView::drawHighlights(QPainter *painter)
 
 void ChessView::updateLabels()
 {
-    QString currentPlayer = board()->currentPlayer();
-    if (currentPlayer == "") {
-        currentPlayer = "RUCH - BIAŁE";
+    ChessBoard::Player currentPlayer = board()->currentPlayer();
+    QString currentPlayerText;
+
+    switch (currentPlayer) {
+    case ChessBoard::PlayerWhite:
+        currentPlayerText = "RUCH: BIAŁE";
+        break;
+    case ChessBoard::PlayerBlack:
+        currentPlayerText =  "RUCH: CZARNE";
+        break;
+    default:
+        currentPlayerText = "RUCH: BIAŁE";
     }
 
     ChessBoard::GameState currentGameState = board()->gameState();
@@ -268,18 +266,18 @@ void ChessView::updateLabels()
     }
     else if (currentGameState == ChessBoard::CheckMate) {
         currentGameStateText = "SZACH MAT!";
-        if (currentPlayer == "RUCH - BIAŁE") {
-            currentPlayer = "BIAŁE\nWYGRYWAJĄ!";
+        if (currentPlayer == ChessBoard::PlayerWhite) {
+            currentPlayerText = "BIAŁE\nWYGRYWAJĄ!";
         }
         else {
-            currentPlayer = "CZARNE\nWYGRYWAJĄ!";
+            currentPlayerText = "CZARNE\nWYGRYWAJĄ!";
         }
     }
     else {
         currentGameStateText = "";
     }
 
-    currentPlayerLabel->setText(currentPlayer);
+    currentPlayerLabel->setText(currentPlayerText);
     gameStateLabel->setText(currentGameStateText);
 }
 

@@ -29,8 +29,8 @@ public:
 
     char getColor(char piece);
 
-    void setCurrentPlayer(const QString &newCurrentPlayer);
-    QString currentPlayer() const;
+    void setCurrentPlayer(const Player &newCurrentPlayer);
+    Player currentPlayer() const;
 
 
     void setGameState(GameState newGameState);
@@ -72,7 +72,7 @@ private:
      * Skoczek  - N         n
      * Pionek   - P         p */
     QVector<char> m_boardData;
-    QString m_currentPlayer;
+    Player m_currentPlayer;
     GameState m_gameState;
     bool m_promotion;
     Piece m_promoteTo;

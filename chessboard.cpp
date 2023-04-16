@@ -134,7 +134,7 @@ char ChessBoard::getColor(char piece)
     }
 }
 
-void ChessBoard::setCurrentPlayer(const QString &newCurrentPlayer)
+void ChessBoard::setCurrentPlayer(const ChessBoard::Player &newCurrentPlayer)
 {
     if (m_currentPlayer == newCurrentPlayer)
         return;
@@ -142,7 +142,7 @@ void ChessBoard::setCurrentPlayer(const QString &newCurrentPlayer)
     emit currentPlayerChanged();
 }
 
-QString ChessBoard::currentPlayer() const
+ChessBoard::Player ChessBoard::currentPlayer() const
 {
     return m_currentPlayer;
 }
@@ -179,7 +179,6 @@ void ChessBoard::setPromoteTo(Piece newPromoteTo)
     m_promoteTo = newPromoteTo;
 
     char piece;
-
     switch(newPromoteTo) {
     case Queen:
         piece = 'Q';
@@ -194,9 +193,8 @@ void ChessBoard::setPromoteTo(Piece newPromoteTo)
         piece = 'N';
         break;
     }
-    qDebug() << "ACHTUUUUNG" << currentPlayer();
-    if (currentPlayer() == "RUCH - BIAŁE") {
-    //if (currentPlayer() == "RUCH - CZARNE") {
+
+    if (currentPlayer() == PlayerWhite) {
         piece = tolower(piece);
     }
 
