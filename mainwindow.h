@@ -13,12 +13,17 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+private slots:
+    void viewClicked(const QPoint &field);
+    void newGamePushBtn();
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void viewClicked(const QPoint &field);
+    void newGame();
+
+
 
 
 private:

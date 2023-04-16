@@ -64,6 +64,7 @@ public:
 signals:
     void fieldSizeChanged();
     void clicked(const QPoint &);
+    void testReset(); // debug
 
 private:
     QPointer<ChessBoard> m_board;

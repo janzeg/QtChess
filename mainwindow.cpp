@@ -7,34 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    m_view = new ChessView;
 
-    m_view->setPiece('P', QIcon(":/chessIcons/Chess_plt45.png")); // pawn
-    m_view->setPiece('K', QIcon(":/chessIcons/Chess_klt45.png")); // king
-    m_view->setPiece('Q', QIcon(":/chessIcons/Chess_qlt45.png")); // queen
-    m_view->setPiece('R', QIcon(":/chessIcons/Chess_rlt45.png")); // rook
-    m_view->setPiece('N', QIcon(":/chessIcons/Chess_nlt45.png")); // knight
-    m_view->setPiece('B', QIcon(":/chessIcons/Chess_blt45.png")); // bishop
-
-    m_view->setPiece('p', QIcon(":/chessIcons/Chess_pdt45.png")); // pawn
-    m_view->setPiece('k', QIcon(":/chessIcons/Chess_kdt45.png")); // king
-    m_view->setPiece('q', QIcon(":/chessIcons/Chess_qdt45.png")); // queen
-    m_view->setPiece('r', QIcon(":/chessIcons/Chess_rdt45.png")); // rook
-    m_view->setPiece('n', QIcon(":/chessIcons/Chess_ndt45.png")); // knight
-    m_view->setPiece('b', QIcon(":/chessIcons/Chess_bdt45.png")); // bishop
-
-    m_algorithm = new ChessAlgorithm(this);
-    //m_algorithm = new FoxAndHounds(this); // F&H
-
-    m_algorithm->newGame();
-    m_view->setBoard(m_algorithm->board());
-    setCentralWidget(m_view);
-    m_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_view->setFieldSize(QSize(50,50));
-    layout()->setSizeConstraint(QLayout::SetFixedSize);
-
-    connect(m_view, SIGNAL(clicked(QPoint)), this, SLOT(viewClicked(QPoint)));
-
+    newGame();
 }
 
 MainWindow::~MainWindow()
@@ -60,3 +34,41 @@ void MainWindow::viewClicked(const QPoint &field)
         m_selectedField = 0;
     }
 }
+
+void MainWindow::newGamePushBtn() {
+    newGame();
+}
+
+void MainWindow::newGame() {
+
+    m_view = new ChessView;
+
+    m_view->setPiece('P', QIcon(":/chessIcons/Chess_plt45.png")); // pawn
+    m_view->setPiece('K', QIcon(":/chessIcons/Chess_klt45.png")); // king
+    m_view->setPiece('Q', QIcon(":/chessIcons/Chess_qlt45.png")); // queen
+    m_view->setPiece('R', QIcon(":/chessIcons/Chess_rlt45.png")); // rook
+    m_view->setPiece('N', QIcon(":/chessIcons/Chess_nlt45.png")); // knight
+    m_view->setPiece('B', QIcon(":/chessIcons/Chess_blt45.png")); // bishop
+
+    m_view->setPiece('p', QIcon(":/chessIcons/Chess_pdt45.png")); // pawn
+    m_view->setPiece('k', QIcon(":/chessIcons/Chess_kdt45.png")); // king
+    m_view->setPiece('q', QIcon(":/chessIcons/Chess_qdt45.png")); // queen
+    m_view->setPiece('r', QIcon(":/chessIcons/Chess_rdt45.png")); // rook
+    m_view->setPiece('n', QIcon(":/chessIcons/Chess_ndt45.png")); // knight
+    m_view->setPiece('b', QIcon(":/chessIcons/Chess_bdt45.png")); // bishop
+
+    m_algorithm = new ChessAlgorithm(this);
+    m_algorithm->newGame();
+    m_view->setBoard(m_algorithm->board());
+    setCentralWidget(m_view);
+    m_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_view->setFieldSize(QSize(50,50));
+    layout()->setSizeConstraint(QLayout::SetFixedSize);
+
+    connect(m_view, SIGNAL(clicked(QPoint)), this, SLOT(viewClicked(QPoint)));
+
+    connect(m_view->newGameButton, SIGNAL(pressed()), this, SLOT(newGamePushBtn()));
+
+}
+
+

@@ -24,10 +24,16 @@ ChessBoard *ChessAlgorithm::bufferBoard() const
 void ChessAlgorithm::setBoard(ChessBoard *board)
 {
     if(board == m_board) return;
-    if(m_board) delete m_board;
+    if(m_board) {
+        m_board->disconnect();
+        delete m_board;
+    }
     m_board = board;
+    if (board) {
+        connect(board, SIGNAL(startNewGame()), this, SLOT(newGame())); // testy
+    }
     emit boardChanged(m_board);
-    connect(board, SIGNAL(startNewGame()), this, SLOT(newGame())); // testy
+
 }
 
 void ChessAlgorithm::setBufferBoard(ChessBoard *bufferBoard)    // ??????
@@ -47,7 +53,6 @@ void ChessAlgorithm::setupBoard()
 
 void ChessAlgorithm::newGame()
 {
-    qDebug() << "NEW GAME";
     // Utworzenie szachownicy
     setupBoard();
     // Rozstawienie figur

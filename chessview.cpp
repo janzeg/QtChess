@@ -17,16 +17,19 @@ void ChessView::setBoard(ChessBoard *board)
     if(m_board) {
         // Rozłączenie wszystkich połączeń (signal-slot) między m_board i tym obiektem (this)
         m_board->disconnect(this);
+        qDebug() << "DISCONNECT";
     }
     m_board = board;
     // Utworzenie połączeń
     if(board){
+        qDebug() << "NOWA PLANSZA ";
         connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
         connect(board, SIGNAL(boardReset()), this, SLOT(update()));
+        //connect(board, SIGNAL(boardReset()), this, SLOT(setBoard())); // debug
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
         connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(setSideBar())); // testy
-        //QObject::connect(newGameButton, &QPushButton::clicked, this, &ChessView::newGameButtonClicked);
-        QObject::connect(newGameButton, &QPushButton::clicked, board, &ChessBoard::newGameButtonClicked);
+        //QObject::connect(newGameButton, &QPushButton::clicked, board, &ChessBoard::newGameButtonClicked);
+        //connect(this, SIGNAL(testReset()), board, SLOT(newGameButtonClicked()));
     }
 
     setSideBar();
@@ -81,6 +84,7 @@ QRect ChessView::fieldRect(int column, int rank) const
 void ChessView::paintEvent(QPaintEvent *event)
 {
     if(!m_board) return;
+    //qDebug() << "NEW GAME - paintEvent ";
     QPainter painter(this);
     for (int r = m_board->ranks(); r > 0; --r) {
         painter.save();
@@ -105,6 +109,7 @@ void ChessView::paintEvent(QPaintEvent *event)
         }
     }
     drawHighlights(&painter);
+
 }
 
 void ChessView::drawRank(QPainter *painter, int rank)
@@ -241,9 +246,21 @@ void ChessView::addLabel()
     currentPlayerLabel->setText(currentPlayer);
     gameStateLabel->setText(currentGameStateText);
 
+
+    //QPushButton *newGameButton = new QPushButton(this);
+    //QFont f("Arial", 14, QFont::Bold);
     newGameButton->setGeometry(QRect(440,360,150,40));
     newGameButton->setFont(f);
     newGameButton->setText("NOWA PARTIA");
+
+    //qDebug() << "NO HALO";
+
+    //QTextStream qtin(stdin);
+    //QString line = qtin.readLine();
+
+    //if (line == "TAK") {
+        //emit testReset();
+    //}
 
 
 }

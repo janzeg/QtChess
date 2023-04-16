@@ -81,6 +81,7 @@ void ChessBoard::movePiece(int fromColumn, int fromRank, int toColumn, int toRan
 
 void ChessBoard::setFen(const QString &fen)
 {
+    //qDebug() << "setFen !!! ";
     int index = 0;
     int skip = 0;
     const int columnCount = columns();
@@ -107,6 +108,7 @@ void ChessBoard::setFen(const QString &fen)
         }
     }
     emit boardReset();
+    //qDebug() << "BOARD DATA - " << boardData();
 }
 
 char ChessBoard::getColor(int column, int rank)
@@ -220,6 +222,7 @@ void ChessBoard::setBoardData(const QVector<char> &newBoardData)
 
 QVector<char> ChessBoard::boardData() const
 {
+    //qDebug() << "BOARD DATA - " << m_boardData;
     return m_boardData;
 }
 
