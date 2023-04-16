@@ -7,8 +7,8 @@ ChessAlgorithm::ChessAlgorithm(QObject *parent)
 {
     m_board = nullptr;
     m_bufferBoard = nullptr;
-    m_currentPlayer = PlayerWhite;
-    m_result = NoResult;
+    m_currentPlayer = ChessBoard::PlayerWhite;
+    //m_result = NoResult;
 }
 
 ChessBoard *ChessAlgorithm::board() const
@@ -60,6 +60,7 @@ void ChessAlgorithm::newGame()
     board()->setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
+/*
 void ChessAlgorithm::setResult(Result value)
 {
     if(result() == value) return;
@@ -67,15 +68,15 @@ void ChessAlgorithm::setResult(Result value)
         m_result = value;
         emit gameOver(m_result);
     } else { m_result = value; }
-}
+}*/
 
-void ChessAlgorithm::setCurrentPlayer(Player value)
+void ChessAlgorithm::setCurrentPlayer(ChessBoard::Player value)
 {
     if(currentPlayer() == value) return;
     m_currentPlayer = value;
     emit currentPlayerChanged(m_currentPlayer);
 
-    if (currentPlayer() == PlayerWhite) {
+    if (currentPlayer() == ChessBoard::PlayerWhite) {
         board()->setCurrentPlayer("RUCH - BIAŁE");
     }
     else {
@@ -262,10 +263,10 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
     }
 
     // Sprawdzenie czy któryś z graczy jest w pacie
-    if (isDeadLock(PlayerWhite)) {
+    if (isDeadLock(ChessBoard::PlayerWhite)) {
         return 0;
     }
-    if (isDeadLock(PlayerBlack)) {
+    if (isDeadLock(ChessBoard::PlayerBlack)) {
         return 0;
     }
 
@@ -279,11 +280,11 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 
 
     // Zmiana gracza wykonującego ruch
-    if (currentPlayer() == PlayerWhite) {
-        setCurrentPlayer(PlayerBlack);
+    if (currentPlayer() == ChessBoard::PlayerWhite) {
+        setCurrentPlayer(ChessBoard::PlayerBlack);
     }
     else {
-        setCurrentPlayer(PlayerWhite);
+        setCurrentPlayer(ChessBoard::PlayerWhite);
     }
 
     return true;

@@ -7,14 +7,12 @@
 class ChessBoard : public QObject
 {
     Q_OBJECT
-    // Sygnały ranksChanged/columnsChanged informują o zmianie wartości ranks/columns
-    Q_PROPERTY(int ranks READ ranks NOTIFY ranksChanged)
-    Q_PROPERTY(int columns READ columns NOTIFY columnsChanged)
-    Q_ENUMS(GameState Piece)
 
 public:
     enum GameState { Normal, Check, CheckMate };
     enum Piece { Queen, Rook, Bishop, Knight};
+    enum Player { NoPlayer = ' ', PlayerWhite = 'w', PlayerBlack = 'b' };
+
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
     int columns() const;
@@ -24,24 +22,18 @@ public:
     void setFen(const QString &fen);
     char getColor(int column, int rank);
     void getPiecePosition(char piece, int &column, int &rank) const;
-    //QVector<char> m_boardData;
     bool isCheck(char color);
 
     QVector<char> boardData() const;
-
     void setBoardData(const QVector<char> &newBoardData);
 
     char getColor(char piece);
 
-    //void setMessage1(const QString &newMessage1);
-    //QString getMessage1() const;
-
     void setCurrentPlayer(const QString &newCurrentPlayer);
-
     QString currentPlayer() const;
 
-    void setGameState(GameState newGameState);
 
+    void setGameState(GameState newGameState);
     GameState gameState() const;
 
     void setPromotion(bool newPromotion);
@@ -84,8 +76,6 @@ private:
     GameState m_gameState;
     bool m_promotion;
     Piece m_promoteTo;
-
-
 
 protected:
     void setRanks(int newRanks);
