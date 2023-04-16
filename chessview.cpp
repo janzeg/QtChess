@@ -21,8 +21,8 @@ void ChessView::setBoard(ChessBoard *board)
     m_board = board;
     // Utworzenie połączeń
     if(board){
-        //connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
-        //connect(board, SIGNAL(boardReset()), this, SLOT(update()));
+        connect(board, SIGNAL(dataChanged(int,int)), this, SLOT(update()));
+        connect(board, SIGNAL(boardReset()), this, SLOT(update()));
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
         connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(setSideBar())); // testy
         //QObject::connect(newGameButton, &QPushButton::clicked, this, &ChessView::newGameButtonClicked);
