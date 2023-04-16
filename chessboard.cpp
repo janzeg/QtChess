@@ -210,16 +210,6 @@ ChessBoard::Piece ChessBoard::promoteTo() const
     return m_promoteTo;
 }
 
-/*
-void ChessBoard::setMessage1(const QString &newMessage1)
-{
-    if (message1 == newMessage1)
-        return;
-    message1 = newMessage1;
-    emit message1Changed();
-    qDebug() << "EMIT OK";
-}*/
-
 void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
 {
     int index = m_boardData.indexOf(piece);
