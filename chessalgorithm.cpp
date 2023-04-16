@@ -27,6 +27,7 @@ void ChessAlgorithm::setBoard(ChessBoard *board)
     if(m_board) delete m_board;
     m_board = board;
     emit boardChanged(m_board);
+    connect(board, SIGNAL(startNewGame()), this, SLOT(newGame())); // testy
 }
 
 void ChessAlgorithm::setBufferBoard(ChessBoard *bufferBoard)    // ??????
@@ -46,6 +47,7 @@ void ChessAlgorithm::setupBoard()
 
 void ChessAlgorithm::newGame()
 {
+    qDebug() << "NEW GAME";
     // Utworzenie szachownicy
     setupBoard();
     // Rozstawienie figur
@@ -256,6 +258,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom,
         // Sprawdzenie czy jest mat
         if (isCheckMate(oppositePlayer) == true) {
             qDebug() << "MAT NA " << char(oppositePlayer) << "!!!!!!";
+            board()->setGameState(ChessBoard::CheckMate);
             return 0;
         }
     }

@@ -2,6 +2,7 @@
 #define CHESSBOARD_H
 
 #include <QObject>
+#include <QDebug>
 
 class ChessBoard : public QObject
 {
@@ -12,7 +13,7 @@ class ChessBoard : public QObject
     Q_ENUMS(GameState)
 
 public:
-    enum GameState { Normal, Check };
+    enum GameState { Normal, Check, CheckMate };
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
     int columns() const;
@@ -38,11 +39,18 @@ public:
 
     QString currentPlayer() const;
 
-
-
     void setGameState(GameState newGameState);
 
     GameState gameState() const;
+
+
+
+public slots:
+    void newGameButtonClicked() {
+        qDebug () << "Button clicked";
+        emit startNewGame();
+    };
+
 
 signals:
     void ranksChanged(int);
@@ -51,6 +59,7 @@ signals:
     void dataChanged(int c, int r);
     void currentPlayerChanged();
     void gameStateChanged(ChessBoard::GameState);
+    void startNewGame();
 
 private:
     int m_ranks;
@@ -66,6 +75,7 @@ private:
     QVector<char> m_boardData;
     QString m_currentPlayer;
     GameState m_gameState;
+
 
 
 protected:

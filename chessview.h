@@ -5,6 +5,7 @@
 #include "chessboard.h"
 #include <QPointer>
 #include <QLabel>
+#include <QPushButton>
 
 class ChessView : public QWidget
 {
@@ -28,6 +29,7 @@ public:
 
     QLabel *currentPlayerLabel = new QLabel(this);
     QLabel *gameStateLabel = new QLabel(this);
+    QPushButton *newGameButton = new QPushButton(this);
 
 
     class Highlight {
@@ -80,6 +82,7 @@ protected:
 
 public slots:
     void setSideBar(); // TESTY
+    //void newGameButtonClicked() {qDebug () << "Button clicked";};
 };
 
 

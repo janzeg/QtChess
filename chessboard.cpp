@@ -5,6 +5,7 @@ ChessBoard::ChessBoard(QObject *parent, int ranks, int columns)
     : QObject{parent}, m_ranks(ranks), m_columns(columns)
 {
     initBoard();
+
 }
 
 int ChessBoard::ranks() const
@@ -163,6 +164,8 @@ ChessBoard::GameState ChessBoard::gameState() const
 {
     return m_gameState;
 }
+
+
 
 /*
 void ChessBoard::setMessage1(const QString &newMessage1)

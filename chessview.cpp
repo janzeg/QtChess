@@ -25,6 +25,8 @@ void ChessView::setBoard(ChessBoard *board)
         //connect(board, SIGNAL(boardReset()), this, SLOT(update()));
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(setSideBar())); // testy
         connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(setSideBar())); // testy
+        //QObject::connect(newGameButton, &QPushButton::clicked, this, &ChessView::newGameButtonClicked);
+        QObject::connect(newGameButton, &QPushButton::clicked, board, &ChessBoard::newGameButtonClicked);
     }
 
     setSideBar();
@@ -208,20 +210,19 @@ void ChessView::addLabel()
     currentPlayerLabel->setFont(f);
     currentPlayerLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     currentPlayerLabel->setAlignment(Qt::AlignCenter);
-    currentPlayerLabel->setGeometry(QRect(450,10,120,40));
+    currentPlayerLabel->setGeometry(QRect(440,10,150,60));
 
 
     QString currentPlayer = board()->currentPlayer();
     if (currentPlayer == "") {
         currentPlayer = "BIAŁE";
     }
-    currentPlayerLabel->setText(currentPlayer);
 
 
     gameStateLabel->setFont(f);
     gameStateLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     gameStateLabel->setAlignment(Qt::AlignCenter);
-    gameStateLabel->setGeometry(QRect(450,80,120,40));
+    gameStateLabel->setGeometry(QRect(440,80,150,40));
 
 
     ChessBoard::GameState currentGameState = board()->gameState();
@@ -229,11 +230,20 @@ void ChessView::addLabel()
     if (currentGameState == ChessBoard::Check) {
         currentGameStateText = "SZACH";
     }
+    else if (currentGameState == ChessBoard::CheckMate) {
+        currentGameStateText = "SZACH MAT!";
+        currentPlayer = "BIAŁE\nWYGRYWAJĄ";
+    }
     else {
         currentGameStateText = "";
     }
 
+    currentPlayerLabel->setText(currentPlayer);
     gameStateLabel->setText(currentGameStateText);
+
+    newGameButton->setGeometry(QRect(440,360,150,40));
+    newGameButton->setFont(f);
+    newGameButton->setText("NOWA PARTIA");
 
 
 }

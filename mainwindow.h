@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include "chessalgorithm.h"
 #include "chessview.h"
-#include "foxandhounds.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

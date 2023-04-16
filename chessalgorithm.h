@@ -14,9 +14,11 @@
 class ChessAlgorithm : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Result Player) //GameState)
+    Q_ENUMS(Result Player)
     Q_PROPERTY(Result result READ result CONSTANT)
     Q_PROPERTY(Player currentPlayer READ currentPlayer NOTIFY currentPlayerChanged)
+
+
 
 public:
     enum Result { NoResult, PlayerWhiteWins, Draw, PlayerBlackWins };
