@@ -14,7 +14,7 @@ class ChessBoard : public QObject
 
 public:
     enum GameState { Normal, Check, CheckMate };
-    enum Piece { Queen };
+    enum Piece { Queen, Rook, Bishop, Knight};
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
     int columns() const;

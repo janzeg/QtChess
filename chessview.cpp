@@ -30,8 +30,14 @@ void ChessView::setBoard(ChessBoard *board)
         connect(board, SIGNAL(promotionChanged()), this, SLOT(showPromotionButtons()));
 
         connect(queenButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Queen); });
+        connect(rookButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Rook); });
+        connect(bishopButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Bishop); });
+        connect(knightButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Knight); });
 
         connect(queenButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
+        connect(rookButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
+        connect(bishopButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
+        connect(knightButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
     }
 
     setSideBar();
@@ -78,6 +84,7 @@ void ChessView::setSideBar()
     knightButton->setText("Skoczek");
 
     hidePromotionButtons();
+    //showPromotionButtons();
 
     updateLabels();
 }
@@ -283,6 +290,7 @@ void ChessView::showPromotionButtons()
     rookButton->setVisible(true);
     bishopButton->setVisible(true);
     knightButton->setVisible(true);
+    currentPlayerLabel->setVisible(false);
 }
 
 void ChessView::hidePromotionButtons()
@@ -292,4 +300,5 @@ void ChessView::hidePromotionButtons()
     rookButton->setVisible(false);
     bishopButton->setVisible(false);
     knightButton->setVisible(false);
+    currentPlayerLabel->setVisible(true);
 }

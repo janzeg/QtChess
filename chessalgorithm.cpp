@@ -156,6 +156,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
         return 0;;
     }
 
+    // Przy promocji nie można wykonać ruchu, dopóki użytkownik nie wybierze figury
     if (board()->promotion() == true) {
         return 0;
     }
@@ -275,6 +276,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
         board()->promCol = colTo;
         board()->promRank = rankTo;
     }
+
 
     // Zmiana gracza wykonującego ruch
     if (currentPlayer() == PlayerWhite) {

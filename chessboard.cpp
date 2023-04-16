@@ -108,7 +108,6 @@ void ChessBoard::setFen(const QString &fen)
         }
     }
     emit boardReset();
-    //qDebug() << "BOARD DATA - " << boardData();
 }
 
 char ChessBoard::getColor(int column, int rank)
@@ -134,12 +133,6 @@ char ChessBoard::getColor(char piece)
         return 'b'; // black
     }
 }
-
-/*
-QString ChessBoard::getMessage1() const
-{
-    return message1;
-}*/
 
 void ChessBoard::setCurrentPlayer(const QString &newCurrentPlayer)
 {
@@ -184,10 +177,32 @@ void ChessBoard::setPromoteTo(Piece newPromoteTo)
 {
     qDebug() << "HALOOO" << newPromoteTo;
     m_promoteTo = newPromoteTo;
-    if (newPromoteTo == Queen) {
-        setData(promCol, promRank, 'Q');
-        setPromotion(false);
+
+    char piece;
+
+    switch(newPromoteTo) {
+    case Queen:
+        piece = 'Q';
+        break;
+    case Rook:
+        piece = 'R';
+        break;
+    case Bishop:
+        piece = 'B';
+        break;
+    case Knight:
+        piece = 'N';
+        break;
     }
+    qDebug() << "ACHTUUUUNG" << currentPlayer();
+    if (currentPlayer() == "RUCH - BIAŁE") {
+    //if (currentPlayer() == "RUCH - CZARNE") {
+        piece = tolower(piece);
+    }
+
+    setData(promCol, promRank, piece);
+
+    setPromotion(false);
 }
 
 ChessBoard::Piece ChessBoard::promoteTo() const
