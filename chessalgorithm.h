@@ -18,16 +18,33 @@ class ChessAlgorithm : public QObject
 public:
     explicit ChessAlgorithm(QObject *parent = 0);
     ChessBoard* board() const;
-    ChessBoard* bufferBoard() const;
 
-    inline ChessBoard::Player currentPlayer() const { return m_currentPlayer; }
+signals:
+    void boardChanged(ChessBoard*);
+    void currentPlayerChanged(ChessBoard::Color);
+
+public slots:
+    virtual void newGame();
+    virtual bool move(int colFrom, int rankFrom, int colTo, int rankTo);
+    bool move(const QPoint &from, const QPoint &to);
+
+protected:
+    void setBoard(ChessBoard *board);
+    virtual void setupBoard();
+
+    ChessBoard* bufferBoard() const;
+    void setBufferBoard(ChessBoard *bufferBoard);
+    void copyBoardToBuffer();
+
+    inline ChessBoard::Color currentPlayer() const { return m_currentPlayer; }
+    void setCurrentPlayer(ChessBoard::Color);
 
     Piece *currentPiece() const;
     void setCurrentPiece(Piece *newCurrentPiece);
     void setCurrentPiece(char newCurrentPiece);
 
-    bool isCheckMate(char color);
-    bool isDeadLock(char color);
+    bool isCheckMate(ChessBoard::Color playerColor);
+    bool isDeadLock(ChessBoard::Color playerColor);
 
     struct castlingCondType {
         bool wKingMoved = false;
@@ -37,24 +54,13 @@ public:
     };
     castlingCondType castlingCond() const;
     void setCastlingCond(char piece, bool value);
-    bool validCastling(int colFrom, int rankFrom, int colTo, int rankTo, char color);
+    bool validCastling(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard::Color playerColor);
 
-signals:
-    void boardChanged(ChessBoard*);
-    void currentPlayerChanged(ChessBoard::Player);
-
-public slots:
-    virtual void newGame();
-    virtual bool move(int colFrom, int rankFrom, int colTo, int rankTo);
-    bool move(const QPoint &from, const QPoint &to);
-
-protected:
-    virtual void setupBoard();
 
 private:
     ChessBoard* m_board;
     ChessBoard* m_bufferBoard;
-    ChessBoard::Player m_currentPlayer;
+    ChessBoard::Color m_currentPlayer;
     Piece* m_currentPiece;
     Pawn m_pawn;
     Rook m_rook;
@@ -63,12 +69,6 @@ private:
     Queen m_queen;
     King m_king;
     castlingCondType m_castlingCond;
-    void setBufferBoard(ChessBoard *bufferBoard);
-    void copyBoardToBuffer();
-    void copyBufferToBoard();
-    void setBoard(ChessBoard *board);
-    void setCurrentPlayer(ChessBoard::Player);
-
 };
 
 #endif // CHESSALGORITHM_H

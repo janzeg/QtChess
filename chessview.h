@@ -10,11 +10,8 @@
 class ChessView : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QSize fieldSize READ fieldSize WRITE setFieldSize NOTIFY fieldSizeChanged)
-    //Q_ENUMS(GameState)
 
 public:
-    //enum GameState { Normal, Check };
     explicit ChessView(QWidget *parent = nullptr);
     void setBoard(ChessBoard *board);
     ChessBoard* board() const;
@@ -22,9 +19,8 @@ public:
     void setFieldSize(const QSize &newFieldSize);
     void setPiece(char type, const QIcon &icon);
     QIcon piece(char type) const;
-    QPoint fieldAt(const QPoint &pt) const; // nie wiem czy na pewno public???
-    void mouseReleaseEvent(QMouseEvent *event); // nie wiem czy na pewno public???
-
+    QPoint fieldAt(const QPoint &pt) const;
+    void mouseReleaseEvent(QMouseEvent *event);
     void setSideBar();
 
     QLabel *currentPlayerLabel = new QLabel(this);
@@ -59,18 +55,16 @@ public:
         QColor m_color;
     };
 
-
     void addHighlight(Highlight *hl);
     void removeHighlight(Highlight *hl);
     inline Highlight *highlight(int index)
     const {return m_highlights.at(index); }
     inline int highlightCount() const { return m_highlights.size(); }
-    void drawHighlights(QPainter *painter); // nie wiem czy na pewno public
+    void drawHighlights(QPainter *painter);
 
 signals:
     void fieldSizeChanged();
     void clicked(const QPoint &);
-    void testReset(); // debug
 
 private:
     QPointer<ChessBoard> m_board;
@@ -79,8 +73,8 @@ private:
     QList<Highlight*> m_highlights;
 
 protected:
-    QSize sizeHint() const; // nie wiem czy na pewno w protected
-    QRect fieldRect(int column, int rank) const;  // nie wiem czy na pewno w protected
+    QSize sizeHint() const;
+    QRect fieldRect(int column, int rank) const;
     virtual void paintEvent(QPaintEvent *event);
     virtual void drawRank(QPainter *painter, int rank);
     virtual void drawColumn(QPainter *painter, int column);
@@ -88,12 +82,9 @@ protected:
     virtual void drawPiece(QPainter *painter, int column, int rank);
 
 public slots:
-    void updateLabels(); // TESTY
-    //void newGameButtonClicked() {qDebug () << "Button clicked";};
+    void updateLabels();
     void showPromotionButtons();
     void hidePromotionButtons();
 };
-
-
 
 #endif // CHESSVIEW_H

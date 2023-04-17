@@ -34,10 +34,7 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
         }
     }
 
-    //qDebug() << crossMove;
-
     int j;
-
     // Sprawdzenie czy coś nie stoi na drodze
     switch (crossMove)
     {
@@ -48,7 +45,6 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
     case topRight:
         j = 1;
         for (int i = rankFrom + 1; i < rankTo; i++) {
-            //qDebug() << "P(" << colFrom + j << ", " << rankFrom + j << ")";
             if (board->data(colFrom + j, rankFrom + j) != ' ') {
                 validOk = false;
             }
@@ -59,7 +55,6 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
     case topLeft:
         j = 1;
         for (int i = rankFrom + 1; i < rankTo; i++) {
-            //qDebug() << "P(" << colFrom - j << ", " << rankFrom + j << ")";
             if (board->data(colFrom - j, rankFrom + j) != ' ') {
                 validOk = false;
             }
@@ -79,7 +74,6 @@ bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBo
 
     case downLeft:
         j = 1;
-        //qDebug() << "P(" << colFrom - j << ", " << rankFrom - j << ")";
         for (int i = rankTo; i < rankFrom - 1; i++) {
             if (board->data(colFrom - j, rankFrom - j) != ' ') {
                 validOk = false;

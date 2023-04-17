@@ -31,7 +31,6 @@ void ChessView::setBoard(ChessBoard *board)
         connect(rookButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Rook); });
         connect(bishopButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Bishop); });
         connect(knightButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Knight); });
-
         connect(queenButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
         connect(rookButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
         connect(bishopButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
@@ -111,9 +110,9 @@ QRect ChessView::fieldRect(int column, int rank) const
     if(!m_board) return QRect();
     const QSize fs = fieldSize();
     QRect fRect = QRect(QPoint((column-1)*fs.width(), (m_board->ranks()-rank)*fs.height()), fs);
-    // offset rect by rank symbols
+    // Prostokąty są zoffsetowane o szerokość liter opisujących wiersze
     int offset = fontMetrics().horizontalAdvance('M');
-    // 'M' is the widest letter
+    // 'M' jest najszerszym znakiem
     return fRect.translated(offset + 4, 0);
 }
 
@@ -199,7 +198,6 @@ QPoint ChessView::fieldAt(const QPoint &pt) const
     if(!m_board) return QPoint();
     const QSize fs = fieldSize();
     int offset = fontMetrics().horizontalAdvance('M')+4;
-    // 'M' is the widest letter
     if(pt.x() < offset) return QPoint();
     int c = (pt.x()-offset) / fs.width();
     int r = pt.y()/fs.height();
@@ -207,14 +205,11 @@ QPoint ChessView::fieldAt(const QPoint &pt) const
             r >= m_board->ranks())
         return QPoint();
     return QPoint(c+1, m_board->ranks() - r);
-    // max rank - r
 }
-
 
 void ChessView::mouseReleaseEvent(QMouseEvent *event)
 {
     QPoint pt = fieldAt(event->pos());
-    qDebug() << "CLICKED: " << pt;
     if(pt.isNull()) return;
     emit clicked(pt);
 }
@@ -245,14 +240,14 @@ void ChessView::drawHighlights(QPainter *painter)
 
 void ChessView::updateLabels()
 {
-    ChessBoard::Player currentPlayer = board()->currentPlayer();
+    ChessBoard::Color currentPlayer = board()->currentPlayer();
     QString currentPlayerText;
 
     switch (currentPlayer) {
-    case ChessBoard::PlayerWhite:
+    case ChessBoard::White:
         currentPlayerText = "RUCH: BIAŁE";
         break;
-    case ChessBoard::PlayerBlack:
+    case ChessBoard::Black:
         currentPlayerText =  "RUCH: CZARNE";
         break;
     default:
@@ -266,7 +261,7 @@ void ChessView::updateLabels()
     }
     else if (currentGameState == ChessBoard::CheckMate) {
         currentGameStateText = "SZACH MAT!";
-        if (currentPlayer == ChessBoard::PlayerWhite) {
+        if (currentPlayer == ChessBoard::White) {
             currentPlayerText = "BIAŁE\nWYGRYWAJĄ!";
         }
         else {

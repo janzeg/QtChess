@@ -7,7 +7,7 @@ ChessAlgorithm::ChessAlgorithm(QObject *parent)
 {
     m_board = nullptr;
     m_bufferBoard = nullptr;
-    m_currentPlayer = ChessBoard::PlayerWhite;
+    m_currentPlayer = ChessBoard::White;
     //m_result = NoResult;
 }
 
@@ -23,18 +23,9 @@ ChessBoard *ChessAlgorithm::bufferBoard() const
 
 void ChessAlgorithm::setBoard(ChessBoard *board)
 {
-    // tu będzie sporo do wywalenia (zobaczyć jak było wcześniej)
-
     if(board == m_board) return;
-    if(m_board) {
-        m_board->disconnect();
-        delete m_board;
-    }
+    if(m_board) delete m_board;
     m_board = board;
-    if (board) {
-        //connect(board, SIGNAL(promotionPieceReady()), this, SLOT(newGame())); // testy
-    }
-    emit boardChanged(m_board);
 }
 
 void ChessAlgorithm::setBufferBoard(ChessBoard *bufferBoard)    // ??????
@@ -56,8 +47,6 @@ void ChessAlgorithm::newGame()
 {
     // Utworzenie szachownicy
     setupBoard();
-    // Rozstawienie figur
-    board()->setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
 /*
@@ -70,29 +59,23 @@ void ChessAlgorithm::setResult(Result value)
     } else { m_result = value; }
 }*/
 
-void ChessAlgorithm::setCurrentPlayer(ChessBoard::Player value)
+void ChessAlgorithm::setCurrentPlayer(ChessBoard::Color value)
 {
     if(currentPlayer() == value) return;
     m_currentPlayer = value;
     emit currentPlayerChanged(m_currentPlayer);
 
-    if (currentPlayer() == ChessBoard::PlayerWhite) {
-        board()->setCurrentPlayer(ChessBoard::PlayerWhite);
+    if (currentPlayer() == ChessBoard::White) {
+        board()->setCurrentPlayer(ChessBoard::White);
     }
     else {
-        board()->setCurrentPlayer(ChessBoard::PlayerBlack);
+        board()->setCurrentPlayer(ChessBoard::Black);
     }
 }
 
 void ChessAlgorithm::copyBoardToBuffer()
 {
     bufferBoard()->setBoardData(board()->boardData());
-}
-
-void ChessAlgorithm::copyBufferToBoard()
-{
-    board()->setBoardData(bufferBoard()->boardData());
-
 }
 
 void ChessAlgorithm::setCastlingCond(char piece, bool value)
@@ -166,16 +149,15 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 
     // Określenie jaka figura została wybrana
     char piece = board()->data(colFrom, rankFrom);
-    //qDebug() << "SOURCE:" << source;
 
     // Określenie koloru figury
-    char color;
-    if (isupper(piece) == true) { color = 'w'; }   // biały
-    else { color = 'b'; }                          // czarny
+    ChessBoard::Color pieceColor;
+    if (isupper(piece) == true) { pieceColor = ChessBoard::White; }   // biały
+    else { pieceColor = ChessBoard::Black; }                          // czarny
 
 
     // Gracz może poruszać się tylko swoimi figurami
-    if (color != currentPlayer()) {
+    if (pieceColor != currentPlayer()) {
         return 0;
     }
 
@@ -192,13 +174,13 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
     }
 
     // Walidacja nr 1 - sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury i ułożenia innych figur na szachownicy
-    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), color) == true)  {
+    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), pieceColor) == true)  {
         // Wykonanie ruchu na buforowej szachownicy
         bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
     else if (castlingTry == true) {
         // Walidacja roszady
-        if (validCastling(colFrom, rankFrom, colTo, rankTo, color) == true) {
+        if (validCastling(colFrom, rankFrom, colTo, rankTo, pieceColor) == true) {
             // Wykonanie ruchu na buforowej szachownicy
             bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
         }
@@ -241,12 +223,12 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
     }
 
     // Określenie przeciwnego gracza
-    char oppositePlayer;
-    if (currentPlayer() == 'w') {
-        oppositePlayer = 'b';
+    ChessBoard::Color oppositePlayer;
+    if (currentPlayer() == ChessBoard::White) {
+        oppositePlayer = ChessBoard::Black;
     }
     else {
-         oppositePlayer = 'w';
+         oppositePlayer = ChessBoard::White;
     }
 
     // Sprawdzenie czy jest szach na graczu przeciwnym
@@ -263,10 +245,10 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
     }
 
     // Sprawdzenie czy któryś z graczy jest w pacie
-    if (isDeadLock(ChessBoard::PlayerWhite)) {
+    if (isDeadLock(ChessBoard::White)) {
         return 0;
     }
-    if (isDeadLock(ChessBoard::PlayerBlack)) {
+    if (isDeadLock(ChessBoard::Black)) {
         return 0;
     }
 
@@ -280,11 +262,11 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 
 
     // Zmiana gracza wykonującego ruch
-    if (currentPlayer() == ChessBoard::PlayerWhite) {
-        setCurrentPlayer(ChessBoard::PlayerBlack);
+    if (currentPlayer() == ChessBoard::White) {
+        setCurrentPlayer(ChessBoard::Black);
     }
     else {
-        setCurrentPlayer(ChessBoard::PlayerWhite);
+        setCurrentPlayer(ChessBoard::White);
     }
 
     return true;
@@ -295,9 +277,7 @@ bool ChessAlgorithm::move(const QPoint &from, const QPoint &to)
     return move(from.x(), from.y(), to.x(), to.y());
 }
 
-bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int rankTo, char color) {
-
-    // Color - kolor gracza, dla którego sprawdzam czy może wykonać roszadę
+bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard::Color playerColor) {
 
     bool castlingOk = true;
 
@@ -313,13 +293,13 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
         castlingVariant = longC;
     }
 
-    if (color == 'w') {
+    if (playerColor == ChessBoard::White) {
         // Sprawdzenie czy król lub wieża wykonały już ruch w tej partii
         if (castlingCond().wKingMoved == true || castlingCond().wRookMoved == true) {
             return false;
         }
     }
-    else if (color == 'b') {
+    else if (playerColor == ChessBoard::Black) {
         // Sprawdzenie czy król lub wieża wykonały już ruch w tej partii
         if (castlingCond().bKingMoved == true || castlingCond().bRookMoved == true) {
             return false;
@@ -331,14 +311,11 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
         // ... sprawdzenie czy pola przez, które przejdzie król nie są atakowane przez przeciwnika
         for (int i = 1; i <= 2; i++) {
             if (board()->data(colFrom + i, rankFrom) != ' ') {
-                //qDebug() << "!!!!! KRÓTKA !!!!!";
-                //qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
                 return false;
             }
             bufferBoard()->movePiece(colFrom, rankFrom, colFrom + i, rankFrom);
-            if (bufferBoard()->isCheck(color) == true) {
+            if (bufferBoard()->isCheck(playerColor) == true) {
                 copyBoardToBuffer();
-                //qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
                 return false;
             }
             else {
@@ -351,14 +328,11 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
         // ... sprawdzenie czy pola przez, które przejdzie król nie są atakowane przez przeciwnika
         for (int i = 1; i <= 3; i++) {
             if (board()->data(colFrom - i, rankFrom) != ' ') {
-                //qDebug() << "!!!!! DŁUGA !!!!!";
-                //qDebug() << "!!!!! ROSZADA - COŚ STOI POMIĘDZY !!!!!";
                 return false;
             }
             bufferBoard()->movePiece(colFrom, rankFrom, colFrom + i, rankFrom);
-            if (bufferBoard()->isCheck(color) == true) {
+            if (bufferBoard()->isCheck(playerColor) == true) {
                 copyBoardToBuffer();
-                //qDebug() << "!!!!! ROSZADA - SZACH !!!!!";
                 return false;
             }
             else {
@@ -370,7 +344,7 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
     return castlingOk;
 }
 
-bool ChessAlgorithm::isCheckMate(char color) {
+bool ChessAlgorithm::isCheckMate(ChessBoard::Color playerColor) {
 
     // Color - kolor gracza, dla którego sprawdzam czy jest mat
 
@@ -379,7 +353,7 @@ bool ChessAlgorithm::isCheckMate(char color) {
     bool checkMate = true;
 
     char king = 'k';
-    if (color == 'w') {
+    if (playerColor == ChessBoard::White) {
         king = toupper(king);
     }
     int kingCol, kingRank;
@@ -392,11 +366,11 @@ bool ChessAlgorithm::isCheckMate(char color) {
         for (int rank = kingRank - 1; rank <= kingRank + 1; rank++) {
             // Walidacja nr 1
             setCurrentPiece(&m_king);
-            if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), bufferBoard(), color) == true) {
+            if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), bufferBoard(), playerColor) == true) {
                 // Wykonanie ruchu na buforowej szachownicy
                 bufferBoard()->movePiece(kingCol, kingRank, col, rank);
                 // Walidacja nr 2
-                if (bufferBoard()->isCheck(color) == false) {
+                if (bufferBoard()->isCheck(playerColor) == false) {
                     checkMate = false;
                     goto exit;
                 }
@@ -413,7 +387,7 @@ bool ChessAlgorithm::isCheckMate(char color) {
             char piece = board()->data(pieceCol, pieceRank);
 
             // Figura nie może być pusta oraz musi należeć do gracza, dla którego sprawdzany jest mat
-            if (piece == ' ' || board()->getColor(piece) != color || tolower(piece) == 'k' ) {
+            if (piece == ' ' || board()->getColor(piece) != playerColor || tolower(piece) == 'k' ) {
                 continue;
             }
 
@@ -424,12 +398,12 @@ bool ChessAlgorithm::isCheckMate(char color) {
                 for (int rank = 1; rank <= 8; rank++) {
 
                     // Walidacja nr 1
-                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), color) == true) {
+                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), playerColor) == true) {
                         // Wykonanie ruchu na buforowej szachownicy
                         bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
 
                         // Walidacja nr 2
-                        if (bufferBoard()->isCheck(color) == false) {
+                        if (bufferBoard()->isCheck(playerColor) == false) {
                             copyBoardToBuffer();
                             checkMate = false;
                             goto exit;
@@ -445,7 +419,7 @@ bool ChessAlgorithm::isCheckMate(char color) {
     return checkMate;
 }
 
-bool ChessAlgorithm::isDeadLock(char color) {
+bool ChessAlgorithm::isDeadLock(ChessBoard::Color playerColor) {
 
     // Color - kolor gracza, dla którego sprawdzam czy jest pat
 
@@ -460,7 +434,7 @@ bool ChessAlgorithm::isDeadLock(char color) {
             char piece = board()->data(pieceCol, pieceRank);
 
             // Figura nie może być pusta oraz musi należeć do gracza, dla którego sprawdzany jest pat
-            if (piece == ' ' || board()->getColor(piece) != color) {
+            if (piece == ' ' || board()->getColor(piece) != playerColor) {
                 continue;
             }
 
@@ -471,12 +445,12 @@ bool ChessAlgorithm::isDeadLock(char color) {
                 for (int rank = 1; rank <= 8; rank++) {
 
                     // Walidacja nr 1
-                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), color) == true) {
+                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), playerColor) == true) {
                         // Wykonanie ruchu na buforowej szachownicy
                         bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
 
                         // Walidacja nr 2
-                        if (bufferBoard()->isCheck(color) == false) {
+                        if (bufferBoard()->isCheck(playerColor) == false) {
                             copyBoardToBuffer();
                             deadLock = false;
                             goto exit;

@@ -20,11 +20,7 @@ private slots:
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
     void newGame();
-
-
-
 
 private:
     Ui::MainWindow *ui;
@@ -32,6 +28,5 @@ private:
     ChessAlgorithm *m_algorithm;
     QPoint m_clickPoint;
     ChessView::FieldHighlight *m_selectedField;
-
 };
 #endif // MAINWINDOW_H

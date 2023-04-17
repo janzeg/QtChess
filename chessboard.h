@@ -11,7 +11,7 @@ class ChessBoard : public QObject
 public:
     enum GameState { Normal, Check, CheckMate };
     enum Piece { Queen, Rook, Bishop, Knight};
-    enum Player { NoPlayer = ' ', PlayerWhite = 'w', PlayerBlack = 'b' };
+    enum Color { NoPlayer = ' ', White = 'w', Black = 'b' };
 
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
@@ -19,33 +19,25 @@ public:
     void setData(int column, int rank, char value);
     char data(int column, int rank) const;
     void movePiece(int fromColumn, int fromRank, int toColumn, int toRank);
-    void setFen(const QString &fen);
     char getColor(int column, int rank);
+    char getColor(char piece);
     void getPiecePosition(char piece, int &column, int &rank) const;
-    bool isCheck(char color);
+    bool isCheck(Color playerColor);
 
     QVector<char> boardData() const;
     void setBoardData(const QVector<char> &newBoardData);
 
-    char getColor(char piece);
-
-    void setCurrentPlayer(const Player &newCurrentPlayer);
-    Player currentPlayer() const;
-
+    void setCurrentPlayer(const Color &newCurrentPlayer);
+    Color currentPlayer() const;
 
     void setGameState(GameState newGameState);
     GameState gameState() const;
 
     void setPromotion(bool newPromotion);
-
     bool promotion() const;
-
     Piece promoteTo() const;
-
-    // TESTY
     int promCol;
     int promRank;
-    // TESTY
 
 signals:
     void ranksChanged(int);
@@ -72,7 +64,7 @@ private:
      * Skoczek  - N         n
      * Pionek   - P         p */
     QVector<char> m_boardData;
-    Player m_currentPlayer;
+    Color m_currentPlayer;
     GameState m_gameState;
     bool m_promotion;
     Piece m_promoteTo;
