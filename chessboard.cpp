@@ -93,22 +93,21 @@ ChessBoard::Color ChessBoard::getColor(int column, int rank)
     if (data(column, rank) == ' ') {
         return None;
     }
-
     if (isupper(data(column, rank)) == true) {
         return White;
     }
     else {
-        return White;
+        return Black;
     }
 }
 
 ChessBoard::Color ChessBoard::getColor(char piece)
 {
     if (isupper(piece) == true) {
-        return White; // white
+        return White;
     }
     else {
-        return Black; // black
+        return Black;
     }
 }
 
@@ -192,39 +191,11 @@ void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
 
     column = (index % 8) + 1;
 
-    /*)
     for (int i = 0; i <= 7; i++) {
         if ((index >= i * 8) && (index < i * 8 + 7)) {
             rank = i + 1;
         }
-    }*/
-
-    // Potem to zrobić w pętli for
-    if (index >= 0 && index < 7) {
-        rank = 1;
     }
-    else if (index >= 8 && index < 15) {
-        rank = 2;
-    }
-    else if (index >= 16 && index <= 23) {
-        rank = 3;
-    }
-    else if (index >= 24 && index <= 31) {
-        rank = 4;
-    }
-    else if (index >= 32 && index <= 39) {
-        rank = 5;
-    }
-    else if (index >= 40 && index <= 47) {
-        rank = 6;
-    }
-    else if (index >= 48 && index <= 55) {
-        rank = 7;
-    }
-    else if (index >= 56 && index <= 63) {
-        rank = 8;
-    }
-    //qDebug() << "RANK - " << rank;
 }
 
 void ChessBoard::setBoardData(const QVector<char> &newBoardData)
