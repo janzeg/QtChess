@@ -88,27 +88,27 @@ void ChessBoard::movePiece(int fromColumn, int fromRank, int toColumn, int toRan
     setData(fromColumn, fromRank, ' ');
 }
 
-char ChessBoard::getColor(int column, int rank)
+ChessBoard::Color ChessBoard::getColor(int column, int rank)
 {
     if (data(column, rank) == ' ') {
-        return 'e'; // empty
+        return None;
     }
 
     if (isupper(data(column, rank)) == true) {
-        return 'w'; // white
+        return White;
     }
     else {
-        return 'b'; // black
+        return White;
     }
 }
 
-char ChessBoard::getColor(char piece)
+ChessBoard::Color ChessBoard::getColor(char piece)
 {
     if (isupper(piece) == true) {
-        return 'w'; // white
+        return White; // white
     }
     else {
-        return 'b'; // black
+        return Black; // black
     }
 }
 
@@ -192,8 +192,15 @@ void ChessBoard::getPiecePosition(char piece, int &column, int &rank) const
 
     column = (index % 8) + 1;
 
+    /*)
+    for (int i = 0; i <= 7; i++) {
+        if ((index >= i * 8) && (index < i * 8 + 7)) {
+            rank = i + 1;
+        }
+    }*/
+
     // Potem to zrobić w pętli for
-    if (index < 7) {
+    if (index >= 0 && index < 7) {
         rank = 1;
     }
     else if (index >= 8 && index < 15) {

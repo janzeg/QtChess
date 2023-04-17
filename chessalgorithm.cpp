@@ -346,8 +346,6 @@ bool ChessAlgorithm::validCastling(int colFrom, int rankFrom, int colTo, int ran
 
 bool ChessAlgorithm::isCheckMate(ChessBoard::Color playerColor) {
 
-    // Color - kolor gracza, dla którego sprawdzam czy jest mat
-
     copyBoardToBuffer();
 
     bool checkMate = true;

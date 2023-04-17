@@ -11,7 +11,7 @@ class ChessBoard : public QObject
 public:
     enum GameState { Normal, Check, CheckMate };
     enum Piece { Queen, Rook, Bishop, Knight};
-    enum Color { NoPlayer = ' ', White = 'w', Black = 'b' };
+    enum Color { None = ' ', White = 'w', Black = 'b'};
 
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
     int ranks() const;
@@ -19,8 +19,8 @@ public:
     void setData(int column, int rank, char value);
     char data(int column, int rank) const;
     void movePiece(int fromColumn, int fromRank, int toColumn, int toRank);
-    char getColor(int column, int rank);
-    char getColor(char piece);
+    Color getColor(int column, int rank);
+    Color getColor(char piece);
     void getPiecePosition(char piece, int &column, int &rank) const;
     bool isCheck(Color playerColor);
 
