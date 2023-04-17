@@ -68,5 +68,3 @@ void MainWindow::newGame() {
 
     connect(m_view->newGameButton, SIGNAL(pressed()), this, SLOT(newGamePushBtn()));
 }
-
-

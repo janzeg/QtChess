@@ -54,6 +54,5 @@ bool Pawn::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
         break;
     }
 
-
     return validOk;
 }

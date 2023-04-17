@@ -41,7 +41,5 @@ bool King::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoar
         }
     }
 
-
-
     return validOk;
 }

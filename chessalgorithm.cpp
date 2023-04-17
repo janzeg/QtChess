@@ -356,7 +356,6 @@ bool ChessAlgorithm::isCheckMate(ChessBoard::Color playerColor) {
     }
     int kingCol, kingRank;
 
-
     board()->getPiecePosition(king, kingCol, kingRank);
 
     // Sprawdzenie czy król może uciec od szacha

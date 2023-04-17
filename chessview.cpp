@@ -10,7 +10,6 @@ ChessView::ChessView(QWidget *parent)
 
 }
 
-// Metoda odpowiedzialna za aktualizację szachownnicy
 void ChessView::setBoard(ChessBoard *board)
 {
     if(m_board == board) return;
@@ -26,7 +25,6 @@ void ChessView::setBoard(ChessBoard *board)
         connect(board, SIGNAL(currentPlayerChanged()), this, SLOT(updateLabels()));
         connect(board, SIGNAL(gameStateChanged(ChessBoard::GameState)), this, SLOT(updateLabels()));
         connect(board, SIGNAL(promotionChanged()), this, SLOT(showPromotionButtons()));
-
         connect(queenButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Queen); });
         connect(rookButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Rook); });
         connect(bishopButton, &QPushButton::clicked, board, [board]{ board->setPromoteTo(ChessBoard::Bishop); });
@@ -36,7 +34,6 @@ void ChessView::setBoard(ChessBoard *board)
         connect(bishopButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
         connect(knightButton, SIGNAL(clicked()), this, SLOT(hidePromotionButtons()));
     }
-
     setSideBar();
     updateGeometry();
 }
@@ -46,7 +43,6 @@ void ChessView::setSideBar()
     QFont f("Arial", 14, QFont::Bold);
     QFont f2("Arial", 10, QFont::Bold);
     QFont f3("Arial", 12, QFont::Bold);
-
     currentPlayerLabel->setFont(f);
     currentPlayerLabel->setAlignment(Qt::AlignCenter);
     currentPlayerLabel->setGeometry(QRect(440,10,150,60));
@@ -102,7 +98,7 @@ QSize ChessView::sizeHint() const
     QSize boardSize = QSize(fieldSize().width() * m_board->columns() + 1, m_fieldSize.height() * m_board->ranks() + 1);
     int rankSize = fontMetrics().horizontalAdvance('M') + 200;
     int columnSize = fontMetrics().height() + 4;
-    return boardSize+QSize(rankSize, columnSize);
+    return boardSize + QSize(rankSize, columnSize);
 }
 
 QRect ChessView::fieldRect(int column, int rank) const

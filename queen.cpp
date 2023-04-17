@@ -54,9 +54,7 @@ bool Queen::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoa
         }
     }
 
-
     int j;
-
     // Sprawdzenie czy coś nie stoi na drodze
     switch (move)
     {
@@ -145,5 +143,4 @@ bool Queen::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoa
     }
 
     return validOk;
-
 }
