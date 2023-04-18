@@ -10,7 +10,7 @@ class ChessBoard : public QObject
 
 public:
     enum GameState { Normal, Check, CheckMate };
-    enum Piece { Queen, Rook, Bishop, Knight};
+    enum Piece { Queen, Rook, Bishop, Knight, King, Pawn};
     enum Color { None = ' ', White = 'w', Black = 'b'};
 
     explicit ChessBoard(QObject *parent = nullptr, int ranks = 0, int columns = 0);
@@ -40,8 +40,6 @@ public:
     int promRank;
 
 signals:
-    void ranksChanged(int);
-    void columnsChanged(int);
     void boardReset();
     void dataChanged(int c, int r);
     void currentPlayerChanged();

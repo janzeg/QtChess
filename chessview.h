@@ -22,17 +22,7 @@ public:
     QPoint fieldAt(const QPoint &pt) const;
     void mouseReleaseEvent(QMouseEvent *event);
     void setSideBar();
-
-    QLabel *currentPlayerLabel = new QLabel(this);
-    QLabel *gameStateLabel = new QLabel(this);
     QPushButton *newGameButton = new QPushButton(this);
-
-    QPushButton *queenButton = new QPushButton(this);
-    QPushButton *rookButton = new QPushButton(this);
-    QPushButton *bishopButton = new QPushButton(this);
-    QPushButton *knightButton = new QPushButton(this);
-    QLabel *promotionLabel = new QLabel(this);
-
 
     class Highlight {
     public:
@@ -57,20 +47,27 @@ public:
 
     void addHighlight(Highlight *hl);
     void removeHighlight(Highlight *hl);
-    inline Highlight *highlight(int index)
-    const {return m_highlights.at(index); }
+    inline Highlight *highlight(int index) const {return m_highlights.at(index); }
     inline int highlightCount() const { return m_highlights.size(); }
     void drawHighlights(QPainter *painter);
 
 signals:
     void fieldSizeChanged();
-    void clicked(const QPoint &);
+    void clicked(const QPoint&);
 
 private:
     QPointer<ChessBoard> m_board;
     QSize m_fieldSize;
     QMap<char,QIcon> m_pieces;
     QList<Highlight*> m_highlights;
+    QLabel *currentPlayerLabel = new QLabel(this);
+    QLabel *gameStateLabel = new QLabel(this);
+    QPushButton *queenButton = new QPushButton(this);
+    QPushButton *rookButton = new QPushButton(this);
+    QPushButton *bishopButton = new QPushButton(this);
+    QPushButton *knightButton = new QPushButton(this);
+    QLabel *promotionLabel = new QLabel(this);
+
 
 protected:
     QSize sizeHint() const;

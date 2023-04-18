@@ -49,16 +49,6 @@ void ChessAlgorithm::newGame()
     setupBoard();
 }
 
-/*
-void ChessAlgorithm::setResult(Result value)
-{
-    if(result() == value) return;
-    if(result() == NoResult) {
-        m_result = value;
-        emit gameOver(m_result);
-    } else { m_result = value; }
-}*/
-
 void ChessAlgorithm::setCurrentPlayer(ChessBoard::Color value)
 {
     if(currentPlayer() == value) return;
@@ -254,7 +244,6 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 
     // Sprawdzenie czy ma miejsce promocja
     if ((piece == 'P' && rankTo == 8) || (piece == 'p' && rankTo == 1)) {
-        qDebug("PROMOCJA");
         board()->setPromotion(true);
         board()->promCol = colTo;
         board()->promRank = rankTo;

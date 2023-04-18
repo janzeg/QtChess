@@ -37,7 +37,7 @@ protected:
     void copyBoardToBuffer();
 
     inline ChessBoard::Color currentPlayer() const { return m_currentPlayer; }
-    void setCurrentPlayer(ChessBoard::Color);
+    void setCurrentPlayer(ChessBoard::Color value);
 
     Piece *currentPiece() const;
     void setCurrentPiece(Piece *newCurrentPiece);

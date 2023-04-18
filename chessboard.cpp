@@ -205,7 +205,6 @@ void ChessBoard::setBoardData(const QVector<char> &newBoardData)
 
 QVector<char> ChessBoard::boardData() const
 {
-    //qDebug() << "BOARD DATA - " << m_boardData;
     return m_boardData;
 }
 
@@ -340,9 +339,6 @@ bool ChessBoard::isCheck(Color playerColor) {
         for (int i = kingRank + 1; i < 7; i++) {
             piece.topRight = data(kingCol + j, kingRank + j);
             if (piece.topRight != ' ') {
-
-                //qDebug() << "ALALALA" << piece.topRight;
-
                 break;
             }
             j++;
