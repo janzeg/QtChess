@@ -6,7 +6,7 @@ Queen::Queen(QObject *parent)
 
 }
 
-bool Queen::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color) {
+bool Queen::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color) {
 
     bool validOk = true;
 

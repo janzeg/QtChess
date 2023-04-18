@@ -9,7 +9,7 @@ class ChessBoard : public QObject
     Q_OBJECT
 
 public:
-    enum GameState { Normal, Check, CheckMate };
+    enum GameState { Normal, Check, CheckMate, DeadLock };
     enum Piece { Queen, Rook, Bishop, Knight, King, Pawn};
     enum Color { None = ' ', White = 'w', Black = 'b'};
 

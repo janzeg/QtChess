@@ -7,7 +7,7 @@ class Queen : public Piece
 {
 public:
     explicit Queen(QObject *parent = nullptr);
-    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color);
+    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
 };
 
 #endif // QUEEN_H

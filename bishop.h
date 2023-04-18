@@ -8,7 +8,7 @@ class Bishop : public Piece
 {
 public:
     explicit Bishop(QObject *parent = nullptr);
-    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color);
+    bool moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color);
 };
 
 #endif // BISHOP_H

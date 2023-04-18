@@ -6,7 +6,7 @@ Bishop::Bishop(QObject *parent)
 
 }
 
-bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, ChessBoard* bufferBoard, char color) {
+bool Bishop::moveValid(int colFrom, int rankFrom, int colTo, int rankTo, ChessBoard* board, char color) {
 
     bool validOk = true;
 

@@ -126,7 +126,7 @@ Piece *ChessAlgorithm::currentPiece() const
 
 bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 {
-    if (board()->gameState() == ChessBoard::CheckMate) {
+    if (board()->gameState() == ChessBoard::CheckMate || board()->gameState() == ChessBoard::DeadLock) {
         return 0;;
     }
 
@@ -164,7 +164,7 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
     }
 
     // Walidacja nr 1 - sprawdzenie czy ruch jest wykonalny pod kątem możliwości figury i ułożenia innych figur na szachownicy
-    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), bufferBoard(), pieceColor) == true)  {
+    if (currentPiece()->moveValid(colFrom, rankFrom, colTo, rankTo, board(), pieceColor) == true)  {
         // Wykonanie ruchu na buforowej szachownicy
         bufferBoard()->movePiece(colFrom, rankFrom, colTo, rankTo);
     }
@@ -236,9 +236,11 @@ bool ChessAlgorithm::move(int colFrom, int rankFrom, int colTo, int rankTo)
 
     // Sprawdzenie czy któryś z graczy jest w pacie
     if (isDeadLock(ChessBoard::White)) {
+        board()->setGameState(ChessBoard::DeadLock);
         return 0;
     }
     if (isDeadLock(ChessBoard::Black)) {
+        board()->setGameState(ChessBoard::DeadLock);
         return 0;
     }
 
@@ -352,7 +354,7 @@ bool ChessAlgorithm::isCheckMate(ChessBoard::Color playerColor) {
         for (int rank = kingRank - 1; rank <= kingRank + 1; rank++) {
             // Walidacja nr 1
             setCurrentPiece(&m_king);
-            if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), bufferBoard(), playerColor) == true) {
+            if (currentPiece()->moveValid(kingCol, kingRank, col, rank, board(), playerColor) == true) {
                 // Wykonanie ruchu na buforowej szachownicy
                 bufferBoard()->movePiece(kingCol, kingRank, col, rank);
                 // Walidacja nr 2
@@ -384,7 +386,7 @@ bool ChessAlgorithm::isCheckMate(ChessBoard::Color playerColor) {
                 for (int rank = 1; rank <= 8; rank++) {
 
                     // Walidacja nr 1
-                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), playerColor) == true) {
+                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), playerColor) == true) {
                         // Wykonanie ruchu na buforowej szachownicy
                         bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
 
@@ -431,7 +433,7 @@ bool ChessAlgorithm::isDeadLock(ChessBoard::Color playerColor) {
                 for (int rank = 1; rank <= 8; rank++) {
 
                     // Walidacja nr 1
-                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), bufferBoard(), playerColor) == true) {
+                    if (currentPiece()->moveValid(pieceCol, pieceRank, col, rank, board(), playerColor) == true) {
                         // Wykonanie ruchu na buforowej szachownicy
                         bufferBoard()->movePiece(pieceCol, pieceRank, col, rank);
 
@@ -439,6 +441,13 @@ bool ChessAlgorithm::isDeadLock(ChessBoard::Color playerColor) {
                         if (bufferBoard()->isCheck(playerColor) == false) {
                             copyBoardToBuffer();
                             deadLock = false;
+
+                            qDebug() << "piece" << piece;
+                            qDebug() << "pieceCol" << pieceCol;
+                            qDebug() << "pieceRank" << pieceRank;
+                            qDebug() << "col" << col;
+                            qDebug() << "rank" << rank;
+
                             goto exit;
                         }
                         // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy

@@ -264,9 +264,14 @@ void ChessView::updateLabels()
             currentPlayerText = "CZARNE\nWYGRYWAJĄ!";
         }
     }
+    else if (currentGameState == ChessBoard::DeadLock) {
+        currentGameStateText = "PAT!";
+        currentPlayerText = "REMIS!";
+    }
     else {
         currentGameStateText = "";
     }
+
 
     currentPlayerLabel->setText(currentPlayerText);
     gameStateLabel->setText(currentGameStateText);
