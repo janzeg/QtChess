@@ -441,13 +441,6 @@ bool ChessAlgorithm::isDeadLock(ChessBoard::Color playerColor) {
                         if (bufferBoard()->isCheck(playerColor) == false) {
                             copyBoardToBuffer();
                             deadLock = false;
-
-                            qDebug() << "piece" << piece;
-                            qDebug() << "pieceCol" << pieceCol;
-                            qDebug() << "pieceRank" << pieceRank;
-                            qDebug() << "col" << col;
-                            qDebug() << "rank" << rank;
-
                             goto exit;
                         }
                         // Wpisanie do szachownicy buforowej z powrotem aktualnego stanu szachownicy
