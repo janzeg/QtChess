@@ -252,8 +252,10 @@ bool ChessBoard::isCheck(Color playerColor) {
     } piece;
 
     int kingCol, kingRank;
-    this->getPiecePosition(king, kingCol, kingRank);
+    getPiecePosition(king, kingCol, kingRank);
 
+    qDebug() << "Kolumna - " << kingCol;
+    qDebug() << "Wiersz - " << kingRank;
 
     // ----------------- SZACH PRAWO ----------------- //
     for (int i = 1; i <= 7; i++) {
@@ -339,6 +341,7 @@ bool ChessBoard::isCheck(Color playerColor) {
         for (int i = kingRank + 1; i < 7; i++) {
             piece.topRight = data(kingCol + j, kingRank + j);
             if (piece.topRight != ' ') {
+                //qDebug() << "Szach góra prawo - " << piece.topRight;
                 break;
             }
             j++;

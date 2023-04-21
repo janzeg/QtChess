@@ -8,7 +8,6 @@ ChessAlgorithm::ChessAlgorithm(QObject *parent)
     m_board = nullptr;
     m_bufferBoard = nullptr;
     m_currentPlayer = ChessBoard::White;
-    //m_result = NoResult;
 }
 
 ChessBoard *ChessAlgorithm::board() const
