@@ -280,8 +280,16 @@ bool ChessBoard::isCheck(Color playerColor) {
     int kingCol, kingRank;
     getPiecePosition(king, kingCol, kingRank);
 
+
+    if (playerColor == White) {
+        qDebug() << "GRACZ BIAŁY";
+    }
+    else {
+        qDebug() << "GRACZ CZARNY";
+    }
     qDebug() << "Kolumna - " << kingCol;
     qDebug() << "Wiersz - " << kingRank;
+
 
     // ----------------- SZACH PRAWO ----------------- //
     for (int i = 1; i <= 7; i++) {
@@ -342,16 +350,18 @@ bool ChessBoard::isCheck(Color playerColor) {
     int j;
 
     // ----------------- SZACH GÓRA-LEWO ----------------- //
-    for (int i = 1; i <= 7; i++) {
+    //for (int i = 1; i <= 7; i++) {
         j = 1;
-        for (int i = kingRank + 1; i < 7; i++) {
+        //for (int i = kingRank + 1; i < 7; i++) {
+        for (int i = 1; i <= 7; i++) {
             piece.topLeft = data(kingCol - j, kingRank + j);
+            qDebug() << "topLeft - " << i << " : " << piece.topLeft;
             if (piece.topLeft != ' ') {
                 break;
             }
             j++;
         }
-    }
+    //}
     if ((piece.topLeft == queen || piece.topLeft == bishop) ||
         (playerColor == White && piece.topLeft == pawn && j == 1))
     {
@@ -362,9 +372,10 @@ bool ChessBoard::isCheck(Color playerColor) {
     }
 
     // ----------------- SZACH GÓRA-PRAWO ----------------- //
-    for (int i = 1; i <= 7; i++) {
+    //for (int i = 1; i <= 7; i++) {
         j = 1;
-        for (int i = kingRank + 1; i < 7; i++) {
+        //for (int i = kingRank + 1; i < 7; i++) {
+        for (int i = 1; i <= 7; i++) {
             piece.topRight = data(kingCol + j, kingRank + j);
             if (piece.topRight != ' ') {
                 //qDebug() << "Szach góra prawo - " << piece.topRight;
@@ -372,7 +383,7 @@ bool ChessBoard::isCheck(Color playerColor) {
             }
             j++;
         }
-    }
+    //}
     if ((piece.topRight == queen || piece.topRight == bishop) ||
         (playerColor == White && piece.topRight == pawn && j == 1))
     {
@@ -383,16 +394,17 @@ bool ChessBoard::isCheck(Color playerColor) {
     }
 
     // ----------------- SZACH DÓŁ-LEWO ----------------- //
-    for (int i = 1; i <= 7; i++) {
+    //for (int i = 1; i <= 7; i++) {
         j = 1;
-        for (int i = 0; i < kingRank - 1; i++) {
+        //for (int i = 0; i < kingRank - 1; i++) {
+        for (int i = 1; i <= 7; i++) {
             piece.bottomLeft = data(kingCol - j, kingRank - j);
             if (piece.bottomLeft != ' ') {
                 break;
             }
             j++;
         }
-    }
+    //}
     if ((piece.bottomLeft == queen || piece.bottomLeft == bishop) ||
         (playerColor == Black && piece.bottomLeft == pawn && j == 1))
     {
@@ -403,16 +415,17 @@ bool ChessBoard::isCheck(Color playerColor) {
     }
 
     // ----------------- SZACH DÓŁ-PRAWO ----------------- //
-    for (int i = 1; i <= 7; i++) {
+    //for (int i = 1; i <= 7; i++) {
         j = 1;
-        for (int i = 0; i < kingRank - 1; i++) {
+        //for (int i = 0; i < kingRank - 1; i++) {
+        for (int i = 1; i <= 7; i++) {
             piece.bottomRight = data(kingCol + j, kingRank - j);
             if (piece.bottomRight != ' ') {
                 break;
             }
             j++;
         }
-    }
+    //}
     if ((piece.bottomRight == queen || piece.bottomRight == bishop) ||
         (playerColor == Black && piece.bottomRight == pawn && j == 1))
     {
