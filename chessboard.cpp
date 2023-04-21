@@ -233,6 +233,7 @@ QVector<char> ChessBoard::boardData() const
     return m_boardData;
 }
 
+
 bool ChessBoard::isCheck(Color playerColor) {
 
     // Parametr color - mówi czy sprawdzamy szach na czarnych czy na białych
